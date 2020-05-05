@@ -1,2 +1,2 @@
-# playground
-# from the feature 1 branch
+# Cpp daily 
+# Objective is to present Modern Cpp feature, best practice etc...
