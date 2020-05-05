@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <algorithm> // for_each
+#include <set>
 
     void displayNationality(const std::string &player) {
 
@@ -18,15 +19,26 @@
     }
 
 
+template<typename Collection>
+auto getIndex(Collection const &collection, size_t offset = 0) {
+
+    return [&collection, offset](auto const& iter) {
+        return offset + std::distance(begin(collection), iter);
+    };
+} 
+
 int main() {
 
     std::vector<std::string> players {"Federer","Djokovic","Nadal","Wawrinka"}; 
+    std::set<std::string> competitions  {"Roland Garros", "Wimbledon", "US open"};
+
+
 
     //Always Prefere a range-for loop to iterate 
 
     std::cout << "Players using for loop" << std::endl;
     // 1. Bad Readability. Error Prone
-    for (auto iter = players.begin(); iter != players.end(); ++iter) {
+    for (auto iter = begin(players); iter != end(players); ++iter) {
         std::cout << *iter << std::endl;
     }
 
@@ -48,6 +60,17 @@ int main() {
     It does not show what is happening in the loop but call a function instead.
     You could also use a lambda instead the function but it will then break the level of abstraction */
     for_each(std::cbegin(players),std::cend(players),displayNationality);
+
+
+    /* 5: How to find the index in a loop
+    a. Do I really need the index ? 
+    b. Simple not clean solution is to declare size_t idx = 0; outside the loop and increment it at each step 
+        size_t idx = 0; 
+    c. use C++20 range  */
+    const auto index = getIndex(competitions,1);
+    for (auto competition = begin(competitions); competition != cend(competitions); ++competition) {
+        std::cout << index(competition) << " : " << *competition << std::endl;
+    }
 
     //auto std::find_if()
 }
