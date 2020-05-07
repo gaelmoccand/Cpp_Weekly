@@ -17,8 +17,8 @@ Objective is to present, share and dicuss Modern Cpp features, best practice and
 
 ### 2 using range-for loop
 Always Prefere a range-for loop to iterate 
-    a. Use  & ref to avoid copying the element 
-    b. Use const if u do not want to modify the element
+    * Use  & ref to avoid copying the element 
+    * Use const if u do not want to modify the element
 ```cpp
     for (const auto &player : players) {
         std::cout << player << std::endl;
@@ -29,6 +29,6 @@ Always Prefere a range-for loop to iterate
 
 
 ## Reference
-[1] https://www.fluentcpp.com/2018/10/26/how-to-access-the-index-of-the-current-element-in-a-modern-for-loop/
-[2] https://www.oreilly.com/library/view/effective-modern-c/9781491908419/
+1. https://www.fluentcpp.com/2018/10/26/how-to-access-the-index-of-the-current-element-in-a-modern-for-loop/
+2. https://www.oreilly.com/library/view/effective-modern-c/9781491908419/
 [3]
