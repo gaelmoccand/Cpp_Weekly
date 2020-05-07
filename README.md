@@ -17,8 +17,8 @@ Objective is to present, share and dicuss Modern Cpp features, best practice and
 
 ### 2 using range-for loop
 Always Prefere a range-for loop to iterate 
-    * Use  & ref to avoid copying the element 
-    * Use const if u do not want to modify the element
+* Use  & ref to avoid copying the element 
+* Use const if u do not want to modify the element
 ```cpp
     for (const auto &player : players) {
         std::cout << player << std::endl;
