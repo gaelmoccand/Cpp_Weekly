@@ -3,15 +3,16 @@
 #include <vector>
 #include <algorithm> // for_each
 #include <set>
+#include <unordered_map>
 
 void displayNationality(const std::string &player) {
 
+    const std::unordered_map< std::string, std::string > playersNation {{"Djokovic","Serbian"},{"Nadal","Spanish"}};
+
     std::cout << (player) << " is ";
-    if (player == "Djokovic") {
-        std::cout << "Serbian" << std::endl;
-    }
-    else if (player == "Nadal") {
-        std::cout << "Spanish" << std::endl;
+    auto nationality = playersNation.find(player);
+    if (nationality != playersNation.end() ) {
+        std::cout << nationality->second << std::endl;
     }
     else {
         std::cout << "Swiss" << std::endl;
@@ -35,7 +36,7 @@ auto getIndex(Collection const &collection, size_t offset = 0) {
 
 int main() {
 
-    std::vector<std::string> players {"Federer","Djokovic","Nadal"}; 
+    std::vector<std::string> players {"Federer", "Djokovic", "Nadal"}; 
     std::set<std::string> competitions  {"Roland Garros", "Wimbledon", "US open"};
 
     //Always Prefere a range-for loop to iterate 
