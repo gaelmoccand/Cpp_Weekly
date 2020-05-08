@@ -9,7 +9,7 @@ void displayNationality(const std::string &player) {
 
     const std::unordered_map< std::string, std::string > playersNation {{"Djokovic","Serbian"},{"Nadal","Spanish"}};
 
-    std::cout << (player) << " is ";
+    std::cout << " " + (player) << " is ";
     auto nationality = playersNation.find(player);
     if (nationality != playersNation.end() ) {
         std::cout << nationality->second << std::endl;
@@ -53,14 +53,14 @@ int main() {
       a. Use  & ref to avoid copying the element 
       b. Use const if u do not want to modify the element*/
     for (const auto &player : players) {
-        std::cout << player << std::endl;
+        std::cout << " " + player << std::endl;
     }
     std::cout <<  std::endl;
 
     std::cout << "3. Generate players'Games. Not possible with range loop :" << std::endl;
     /* 3. In this case Can't be a range loop. It touches two elements */
     for (size_t idx = 1; idx < players.size(); ++idx) {
-      std::cout << players[idx] << " VS " << players[idx-1] << std::endl;
+      std::cout << " " + players[idx] + " VS " + players[idx-1] << std::endl;
     }
     std::cout <<  std::endl;
 
@@ -84,13 +84,13 @@ int main() {
     }
     std::cout <<  std::endl;
 
-    /* 5: findAndInsert function to any container using std::find and emplace instead of insert
+    /* 6: findAndInsert function to any container using std::find and emplace instead of insert
         ref: - Item 42 Consider Emplacement instead of insertion from Effective Modern C++
              - Item 13 Prefer const_iterators from Effective Modern C++*/
     std::cout << "5. Find player Federer and add emplace another player just in front of it " << std::endl;
     findAndEmplace(players, std::string{"Federer"}, std::string{"Wawrinka"});
     for (const auto &player : players) {
-        std::cout << (player) << std::endl;
+        std::cout << " " + (player) << std::endl;
     }
     std::cout <<  std::endl;
 
