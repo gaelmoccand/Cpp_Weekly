@@ -87,8 +87,8 @@ int main() {
     /* 6: findAndInsert function to any container using std::find and emplace instead of insert
         ref: - Item 42 Consider Emplacement instead of insertion from Effective Modern C++
              - Item 13 Prefer const_iterators from Effective Modern C++*/
-    std::cout << "5. Find player Federer and add emplace another player just in front of it " << std::endl;
-    findAndEmplace(players, std::string{"Federer"}, std::string{"Wawrinka"});
+    std::cout << "5. Find player Djokovic and add emplace another player just in front of it " << std::endl;
+    findAndEmplace(players, std::string{"Djokovic"}, std::string{"Wawrinka"});
     for (const auto &player : players) {
         std::cout << " " + (player) << std::endl;
     }
