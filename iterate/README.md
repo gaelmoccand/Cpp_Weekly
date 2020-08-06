@@ -1,7 +1,7 @@
 # Cpp daily 
 Objective is to present, share and dicuss Modern Cpp features, best practice and more
 
-## How to iterate over containers for-range loop, for_each
+## How to iterate over collections with for-range loop, for_each and more
 
 ### 1 using iterator 
  Bad Readability. Error Prone
