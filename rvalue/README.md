@@ -1,4 +1,4 @@
-## rvalue lvalue and move
+## rvalue reference and std::move
 
 ###  Definitions
 
@@ -20,7 +20,7 @@
 
 ###  Rvalue reference, Lvalue the Context matters
 
-Sometimes **Rvalue reference can themselves be Lvalue** (see code snipet below)
+Sometimes **Rvalue reference can themselves be Lvalue** (see code snipet below) [1]
 std::move does not move anything but it just casting an lvalue to an rvalue reference. 
 
 
@@ -39,10 +39,56 @@ std::move does not move anything but it just casting an lvalue to an rvalue refe
     f(std::move(lfs)); // OK: lfs is cast to Rvalue reference
 ```
 
-Please also check the main.cpp code and play with it. 
+###  RVO and object creation
+Have a look at the main.cpp code and play with it. 
+RVO basically means the compiler is allowed to avoid creating temporary objects for return values, even if they have side effects.[3]
+Without RVO the compiler creates 3 Vector objects instead of only 1:
+1. A temporary object inside factory() (using ctor)
+2. A temporary object for the returned object inside main() (mv ctor);
+3. The named object Vector (2nd move ctor).
+
+
+```cpp
+
+class Vector{
+ private:
+    double* elem;
+    size_t sz;
+ public:
+    explicit Vector(size_t s);              // ctor
+    ~Vector(){delete[] elem;}               // dtor
+
+    Vector(const Vector& vec);              // cp ctor
+    Vector& operator=(const Vector& vec);   // cp assignment operator
+
+    Vector( Vector&& vec);                  // mv ctor
+    Vector& operator=( Vector&& vec);       // cp assignement operator
+};
+
+Vector factory(size_t s)
+{
+    return Vector(s);   // RVO to avoid copying Vector
+}
+
+int main()
+{
+    Vector vec = factory(4);
+}
+```
+###  Uset std::move on rvalue reference but not to local objects
+
+```cpp
+ Vector factory(size_t s)
+{
+    return Vector(s);   // RVO to avoid copying Vector
+}
+
+```
+
 
 ## References
 1. https://www.fluentcpp.com/2018/02/06/understanding-lvalues-rvalues-and-their-references/
 2. https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners
+3. https://shaharmike.com/cpp/rvo/
 
 
