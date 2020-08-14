@@ -1,4 +1,16 @@
-// g++ -std=c++17 -O2 -Wall -pedantic -fno-elide-constructors main.cpp -o main
+/* 
+
+Try both versions and check the differnces.
+To disable Rreturn Value OPtimization RVO use flag -fno-elide-constructors 
+
+1) g++ -std=c++17 -O2 -Wall -pedantic -fno-elide-constructors main.cpp -o main
+2) g++ -std=c++11 -O2 -Wall -pedantic -fno-elide-constructors main.cpp -o main
+3) g++ -std=c++17 -O2 -Wall -pedantic main.cpp -o main
+
+
+Note: this code is not ready yet. Copy-and-swap idiom should be used to avoid code duplication and self assignement check. 
+
+*/
 
 #include <iostream>
 #include <string>
@@ -23,7 +35,6 @@ class Vector{
     const double& operator[](int i) const;
 
     int size() const;
-    Vector factory(size_t s);
 };
 
 Vector::Vector(size_t s)
@@ -44,19 +55,10 @@ Vector::Vector(const Vector& other)
     std::copy(other.elem, other.elem + sz, elem);   // deep copy is required
 }
 
-Vector::Vector(Vector&& other)
-:elem{other.elem},sz{other.sz} // steal the data first for the rvalue reference
-{
-                                // no deep copy involved here just moving ressources
-    std::cout << "mv ctor" << std::endl;
-    other.elem = nullptr;       // important to set rvalue ref data to valid state
-    other.sz = 0;               // to preven it being accidentally delted when the temporary object dies
-}
-
 Vector& Vector::operator=(const Vector& other) // input const -> left untouched
 {
     std::cout << "copy assignement" << std::endl;
-    if(this == &other) return *this;    // checkr for self assignment
+    if(this == &other) return *this;    // check for self assignment
     delete[] elem;
     elem = new double[other.sz];
     std::copy(other.elem, other.elem + other.sz, elem);
@@ -64,20 +66,27 @@ Vector& Vector::operator=(const Vector& other) // input const -> left untouched
     return *this;                       // by convention a reference to this class is returned
 }
 
+Vector::Vector(Vector&& other)
+:elem{other.elem},sz{other.sz}          // steal the data first for the rvalue reference
+{
+                                        // no deep copy involved here just moving ressources
+    std::cout << "mv ctor" << std::endl;
+    other.elem = nullptr;               // important to set rvalue ref data to valid state
+    other.sz = 0;                       // to preven it being accidentally delted when the temporary object dies
+}
+
 Vector& Vector::operator=(Vector&& other)
 {
     std::cout << "mv assignement" << std::endl;
 
-    if(this == &other) return *this;
-
-    delete[] elem;          // clean of actual ressource
-
+    if(this == &other) return *this;    // check for self assignment
+    delete[] elem;                      // clean of actual ressource
     elem = other.elem;
     sz = other.sz;
 
-    other.elem = nullptr;   // put temp. object in valid state
+    other.elem = nullptr;               // put temp. object in valid state
     other.sz = 0;
-    return *this;
+    return *this;                       // by convention a reference to this class is returned
 }
 
 const double& Vector::operator[](int i) const 
@@ -103,7 +112,7 @@ int Vector::size() const
     return sz;
 }
 
-Vector Vector::factory(size_t s)
+Vector factory(size_t s)
 {
     return Vector(s);
 }
@@ -112,25 +121,38 @@ Vector Vector::factory(size_t s)
 int main()
 {
 
+    std::cout << "Vector vec1(3); \n";
     Vector vec1(3);         // ctor
-
     vec1[0]=1;
     vec1[1]=2;
     vec1[2]=3;
+    std::cout << std::endl;
 
+    std::cout << "Vector vec2 = vec1; \n";
     Vector vec2 = vec1;     // copy ctor
+    std::cout << std::endl;
+
+    std::cout << "Vector vec3{vec1}; \n";
     Vector vec3{vec1};      // copy ctor
+    std::cout << std::endl;
+
+    std::cout << "Vector vec4(3); \n";
     Vector vec4(3);         // ctor
+    std::cout << "vec4 = vec1; \n";
     vec4 = vec1;            // copy assignement
+    std::cout << std::endl;
 
+    std::cout << "Vector vec5 = std::move(vec2); \n";
     Vector vec5 = std::move(vec2);// mv ctor 
-
     //vec2.size();             // NOOOOO MUST not use vec2 anymore !
+    std::cout << std::endl;
 
-    std::cout << "vec1[0] is : " << vec1[2] << "\n";
-    std::cout << "vec4[0] is : " << vec4[2] << "\n";
-    std::cout << "vec4[0] is : " << vec5[2] << "\n";
+    std::cout << "Vector vec6 = factory(3); \n";
+    Vector vec6 = factory(3);
+    std::cout << std::endl;
 
+    std::cout << "vec6 = factory(4); \n";
+    vec6 = factory(4);
 }
 
 
