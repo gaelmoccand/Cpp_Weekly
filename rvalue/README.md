@@ -20,7 +20,9 @@
 
 ###  Rvalue reference, Lvalue the Context matters
 
-Sometimes **Rvalue reference can themselves be Lvalue**
+Sometimes **Rvalue reference can themselves be Lvalue** (see code snipet below)
+std::move does not move anything but it just casting an lvalue to an rvalue reference. 
+
 
 ```cpp
     void f(MyClass&& rhs)
@@ -36,6 +38,8 @@ Sometimes **Rvalue reference can themselves be Lvalue**
 
     f(std::move(lfs)); // OK: lfs is cast to Rvalue reference
 ```
+
+Please also check the main.cpp code and play with it. 
 
 ## References
 1. https://www.fluentcpp.com/2018/02/06/understanding-lvalues-rvalues-and-their-references/
