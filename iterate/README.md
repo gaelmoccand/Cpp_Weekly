@@ -3,7 +3,7 @@ Objective is to present, share and dicuss Modern Cpp features, best practice and
 
 ## How to iterate over collections with for-range loop, for_each and more
 
-### 1 using iterator 
+### 1. using iterator 
  Bad Readability. Error Prone
 
 ```cpp
@@ -13,7 +13,7 @@ Objective is to present, share and dicuss Modern Cpp features, best practice and
     }
 ```
 
-### 2 using range-for loop
+### 2. using range-for loop
 Always Prefere a range-for loop to iterate 
 * Use  & ref to avoid copying the element 
 * Use const if u do not want to modify the element
@@ -22,7 +22,7 @@ Always Prefere a range-for loop to iterate
         std::cout << player << std::endl;
     }
 ```
-### 3 When using several elements of the containers
+### 3. When using several elements of the containers
 Can't be a range-for loop in some case
 ```cpp
     for (size_t idx = 1; idx < players.size(); ++idx) {
@@ -30,14 +30,14 @@ Can't be a range-for loop in some case
     }
 ```
 
-### 4 Use for_each to raise level of abstraction
+### 4. Use for_each to raise level of abstraction
 * It does not show what is happening in the loop but call a function instead.
 * You could also use a lambda instead of the function but it will then "break" the level of abstraction [2]
 ```cpp
     for_each(std::cbegin(players),std::cend(players),displayNationality);
 ```
 
-### 5 Use for_each to raise level of abstraction
+### 5. range-for loop acessing the index
 * First Question: Do I really need the index ? 
 * Simple not so clean solution is to declare size_t idx = 0; outside the loop and increment it at each step 
 
@@ -48,7 +48,7 @@ Can't be a range-for loop in some case
         ++idx;
     }
 ```
-* Better Solution [2]
+* Better Solution would be [2]
 ```cpp
    template<typename Collection>
    auto getIndex(Collection const &collection, size_t offset = 0) {
@@ -68,8 +68,8 @@ Can't be a range-for loop in some case
 * alternatively use C++20 range [4]
 
 
-### 6 Find and Insert using emplace
-* Consider Emplacement instead of insertion Item 42 [2]
+### 6. Find and Insert using emplace
+* Consider Emplacement instead of insertion Item 42 from effective moderne C++ 14/17 Book [2]
 * Prefer const_iterators Item 13  [2]
 
 ```cpp
