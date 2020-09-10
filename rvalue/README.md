@@ -67,7 +67,7 @@ class Vector{
 
 Vector factory(size_t s)
 {
-    return Vector(s);   // RVO to avoid copying Vector
+    return Vector(s);   // RVO to avoid copying Vector local variable
 }
 
 int main()
@@ -75,16 +75,33 @@ int main()
     Vector vec = factory(4);
 }
 ```
-###  Uset std::move on rvalue reference but not to local objects
+###  Apply std::move to rvalue reference being return from fct that return by value but do not apply std::move on local objects
+
+Assuming that Matrix type supports move construction, casting lhs to an rvalue in the return statement will then increase efficency 
+by moving lhs instead of copying it. If Matrix type does not support move ctor yet , then it won't hurts
 
 ```cpp
- Vector factory(size_t s)
+Matrix 
+operator+(Matrix&& lhs, const Matrix& rhs)
 {
-    return Vector(s);   // RVO to avoid copying Vector
+    lhs+=rhs;
+    return std::move(lhs);
 }
-
 ```
 
+However you should not try to std::move on local objects because then the compiler will not be able to use RVO.
+Have a look at this example:
+
+```cpp
+Widget makeWidget()
+{
+    Widget w;
+    ...
+    return std::move(w); // Don't do this ! RVO won't work an
+}
+```
+Because of std::move, what is being return is not the local object but the reference to this object (this is what std::move does).
+RVO does not occure in this case.
 
 ## References
 1. https://www.fluentcpp.com/2018/02/06/understanding-lvalues-rvalues-and-their-references/
