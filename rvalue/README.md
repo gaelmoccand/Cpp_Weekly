@@ -1,6 +1,6 @@
 ## rvalue reference and std::move
 
-###  Definitions
+### 1. Definitions
 
  - an **Lvalue** denotes an object whose **resource cannot be reused**, which includes most objects that we can think of in code. Lvalues include expressions that designate objects directly by their names but not only.
  - an **Rvalue** denotes an object whose **resource can be reused**, that is to say a **disposable object**. This typically includes temporary objects as they can’t be manipulated at the place they are created and are soon to be destroyed.
@@ -18,7 +18,7 @@
     const int& x = 123; // OK: Lvalue const bound to Rvalue
 ```
 
-###  Rvalue reference, Lvalue the Context matters
+### 2. Rvalue reference, Lvalue the Context matters
 
 Sometimes **Rvalue reference can themselves be Lvalue** (see code snipet below) [1]
 std::move does not move anything but it just casting an lvalue to an rvalue reference. 
@@ -39,7 +39,7 @@ std::move does not move anything but it just casting an lvalue to an rvalue refe
     f(std::move(lfs)); // OK: lfs is cast to Rvalue reference
 ```
 
-###  RVO and object creation
+### 3. RVO and object creation
 Have a look at the main.cpp code and play with it. 
 RVO basically means the compiler is allowed to avoid creating temporary objects for return values, even if they have side effects.[3]
 Without RVO the compiler creates 3 Vector objects instead of only 1:
@@ -75,7 +75,7 @@ int main()
     Vector vec = factory(4);
 }
 ```
-###  Apply std::move to rvalue reference being return from fct that return by value but do not apply std::move on local objects
+### 4. Apply std::move to rvalue reference being return from fct that return by value but not on local object
 
 Assuming that Matrix type supports move construction, casting lhs to an rvalue in the return statement will then increase efficency 
 by moving lhs instead of copying it. If Matrix type does not support move ctor yet , then it won't hurts
@@ -85,7 +85,7 @@ Matrix
 operator+(Matrix&& lhs, const Matrix& rhs)
 {
     lhs+=rhs;
-    return std::move(lhs);
+    return std::move(lhs); // if mv ctor is supported then move instead of copy 
 }
 ```
 
@@ -101,11 +101,14 @@ Widget makeWidget()
 }
 ```
 Because of std::move, what is being return is not the local object but the reference to this object (this is what std::move does).
-RVO does not occure in this case.
+RVO does not occure in this case (RVO only performs if what's being returned is a local object not in this case a reference to w)
+
+Never apply std::move if they would otherwise be eligible for RVO. [4]
 
 ## References
 1. https://www.fluentcpp.com/2018/02/06/understanding-lvalues-rvalues-and-their-references/
 2. https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners
 3. https://shaharmike.com/cpp/rvo/
+4. https://www.oreilly.com/library/view/effective-modern-c/9781491908419/ item 25
 
 
