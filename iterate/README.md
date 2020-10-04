@@ -48,7 +48,7 @@ Can't be a range-for loop in some case
         ++idx;
     }
 ```
-* Better Solution would be [2]
+* A better approach would be to create getIndex fct[2]
 ```cpp
    template<typename Collection>
    auto getIndex(Collection const &collection, size_t offset = 0) {
