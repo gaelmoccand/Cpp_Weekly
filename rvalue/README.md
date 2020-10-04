@@ -3,7 +3,7 @@
 ### 1. Definitions
 
  - an **Lvalue** denotes an object whose **resource cannot be reused**, which includes most objects that we can think of in code. Lvalues include expressions that designate objects directly by their names but not only.
- - an **Rvalue** denotes an object whose **resource can be reused**, that is to say a **disposable object**. This typically includes temporary objects as they can’t be manipulated at the place they are created and are soon to be destroyed.
+ - an **Rvalue** denotes an object whose **resource can be reused**, that is to say a **disposable object**. This typically includes temporary objects as they canâ€™t be manipulated at the place they are created and are soon to be destroyed.
  - an **Lvalue** reference is a reference that binds to an **Lvalue**
  - an **Rvalue** reference is a reference that binds to an **Rvalue**
  - there can be **Lvalue const** reference binding to an **Rvalue** [1],[2]
@@ -89,7 +89,7 @@ operator+(Matrix&& lhs, const Matrix& rhs)
 }
 ```
 
-However you should not try to std::move on local objects because then the compiler will not be able to use RVO.
+However you should **NOT try to std::move on local objects** because then the compiler will not be able to use RVO.
 Have a look at this example:
 
 ```cpp
