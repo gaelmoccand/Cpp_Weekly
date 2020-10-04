@@ -69,8 +69,8 @@ Can't be a range-for loop in some case
 
 
 ### 6. Find and Insert using emplace
-* Consider Emplacement instead of insertion Item 42 from effective moderne C++ 14/17 Book [2]
-* Prefer const_iterators Item 13  [2]
+* Consider Emplacement instead of insertion. This is sometime more efficient because do not create temporary object. Item 42 from effective moderne C++ 14/17 Book [2]
+* Prefer const_iterators ie: cbegin and cend. Item 13 from effective moderne C++ 14/17  [2]
 
 ```cpp
     template<typename C, typename V>
