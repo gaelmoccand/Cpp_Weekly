@@ -8,7 +8,7 @@ To disable Rreturn Value OPtimization RVO use flag -fno-elide-constructors
 3) g++ -std=c++17 -O2 -Wall -pedantic main.cpp -o main
 
 
-Note: this code is not ready yet. Copy-and-swap idiom should be used to avoid code duplication and self assignement check. 
+Note: this code is not optimal yet. Copy-and-swap idiom should be used to avoid code duplication and self assignement check. 
 
 */
 
@@ -16,6 +16,9 @@ Note: this code is not ready yet. Copy-and-swap idiom should be used to avoid co
 #include <string>
 #include <stdexcept>
 #include <exception>
+
+
+
 
 class Vector{
  private:
@@ -112,11 +115,16 @@ int Vector::size() const
     return sz;
 }
 
+Vector makeVector()
+{
+    Vector vec{2};
+    return (vec); // compiler must elide copy or std:move(vec)
+}
+
 Vector factory(size_t s)
 {
     return Vector(s);
 }
-
 
 int main()
 {
@@ -144,7 +152,7 @@ int main()
 
     std::cout << "Vector vec5 = std::move(vec2); \n";
     Vector vec5 = std::move(vec2);// mv ctor 
-    //vec2.size();             // NOOOOO MUST not use vec2 anymore !
+    //vec2.size();             // NOOOOO MUST not use vec2 anymore vec2 value is unknown !
     std::cout << std::endl;
 
     std::cout << "Vector vec6 = factory(3); \n";
@@ -153,6 +161,11 @@ int main()
 
     std::cout << "vec6 = factory(4); \n";
     vec6 = factory(4);
+    std::cout << std::endl;
+
+    std::cout << "Vector vec7 = makeVector(); \n";
+    Vector vec7 = makeVector();
+    std::cout << std::endl;
 }
 
 
