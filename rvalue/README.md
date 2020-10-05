@@ -105,6 +105,26 @@ RVO does not occure in this case (RVO only performs if what's being returned is 
 
 Never apply std::move if they would otherwise be eligible for RVO. [4]
 
+```cpp
+Widget makeWidget()
+{
+    Widget w; // local variable
+    ...
+    return w; // Compiler treat w as rvalue -> std::move(w)
+}
+```
+Compiler must treat it as if it had been written this way:
+
+```cpp
+Widget makeWidget()
+{
+    Widget w;
+    ...
+    return std::move(w); 
+}
+```
+Same apply for by-value function parameters. Not eligible for copy elision but compilers will treat them as rvalue
+
 ## References
 1. https://www.fluentcpp.com/2018/02/06/understanding-lvalues-rvalues-and-their-references/
 2. https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners
