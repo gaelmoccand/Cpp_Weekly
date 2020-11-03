@@ -20,8 +20,9 @@
 
 ### 2. Rvalue reference, Lvalue the Context matters
 
-Sometimes **Rvalue reference can themselves be Lvalue** (see code snipet below) [1]
-std::move does not move anything but it just casting an lvalue to an rvalue reference. 
+Sometimes **Rvalue reference can themselves be Lvalue** (see code snipet below) [1].
+
+Please note that **std::move** does not move anything but it just casting an Lvalue to an Rvalue reference. 
 
 
 ```cpp
@@ -40,9 +41,9 @@ std::move does not move anything but it just casting an lvalue to an rvalue refe
 ```
 
 ### 3. RVO and object creation
-Have a look at the main.cpp code and play with it. 
+
 RVO basically means the compiler is allowed to avoid creating temporary objects for return values, even if they have side effects.[3]
-Without RVO the compiler creates 3 Vector objects instead of only 1:
+Without RVO the compiler creates 3 Vector objects instead of only 1 (check belwow the piece of code):
 1. A temporary object inside factory() (using ctor)
 2. A temporary object for the returned object inside main() (mv ctor);
 3. The named object Vector (2nd move ctor).
@@ -129,6 +130,6 @@ Same apply for by-value function parameters. Not eligible for copy elision but c
 1. https://www.fluentcpp.com/2018/02/06/understanding-lvalues-rvalues-and-their-references/
 2. https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners
 3. https://shaharmike.com/cpp/rvo/
-4. https://www.oreilly.com/library/view/effective-modern-c/9781491908419/ item 25
+4. https://www.oreilly.com/library/view/effective-modern-c/9781491908419/item25
 
 
