@@ -1,4 +1,4 @@
-## rvalue reference and std::move
+## rvalue reference , std::move and return value optimization
 
 ### 1. Definitions
 
@@ -98,38 +98,110 @@ Widget makeWidget()
 {
     Widget w;
     ...
-    return std::move(w); // Don't do this ! RVO won't work an
+    return std::move(w); // Don't do this ! RVO won't work !
 }
 ```
-Because of std::move, what is being return is not the local object but the reference to this object (this is what std::move does).
-RVO does not occure in this case (RVO only performs if what's being returned is a local object not in this case a reference to w)
+Because of std::move, what is being return is not the local object but the reference to this object (this is what std::move does),
+RVO does not occur in this case (RVO only performs if what's being returned is a local object not in this case a reference to the object)
 
 Never apply std::move if they would otherwise be eligible for RVO. [4]
 
 ```cpp
-Widget makeWidget()
+Vector makeVector()
 {
-    Widget w; // local variable
+    Vector vec{2}; // local variable
     ...
-    return w; // Compiler treat w as rvalue -> std::move(w)
+    return vec; // Compiler treat vec as rvalue -> std::move(w)
 }
+
 ```
-Compiler must treat it as if it had been written this way:
+Compiler must either elide the copy of vec OR they must treat as if it had been written this way:
 
 ```cpp
-Widget makeWidget()
+Vector makeVector()
 {
-    Widget w;
+    Vector vec{2}; // local variable
     ...
-    return std::move(w); 
+    return std::move(vec); // treat vec as Rvalue because no copy elision was performed
 }
 ```
-Same apply for by-value function parameters. Not eligible for copy elision but compilers will treat them as rvalue
+Same apply for by-value function parameters. 
+They are not eligible for copy elision but compilers will treat them as Rvalue:
+
+```cpp
+Vector makeVector(Vector vec) // by-value parameter of same type as fct return
+{
+    ...
+    return std::move(vec); // treat vec as Rvalue because no copy elision was performed
+}
+```
+
+### 5. Check that types you are using have cheap move operation or no move operation
+
+Standard container contents are stored on the heap and a pointer points to the heap. 
+It makes move operation really efficient O(1). Move operation just copy the pointer to the conainer's contents from the source 
+container to the targer and set the source's pointer to null.
+
+std::array is differant from other std container. std::array has not such ponter because the data contents are stored 
+directly in the std::array object.
+So for std:array move operation must copy or moved each element in the container O(n).
+So move for std::array is not cheap.
+
+Note also that small string optimization (SSO, <= 15 char), stores small strings in a buffer within the string object.
+There is also no heap allocation in this SSO case.
+
+### 6. Avoid overloading on universal reference
+
+See effective modern c++ Item26 [7]
+
+### 7. Copying from an lvalue, moving from an rvalue in a ctor 
+
+The goal here is to avoid copy in the ctor. A copy occurs when passing Lvalue to ctor
+but only move is done when a Rvalue is pass.
+
+```cpp
+template<class T>
+class TextDisplayer
+{
+    public:
+        explicit TextBox(const std::string& text) : m_text(text) {} // 1 copy
+        explicit TextBox(std::string&& text) : m_text(std::move(text)) {} // no copy only mv
+    private:
+    T m_text;
+};
+```
+
+The solution for C++ 17 is to use so called deduction guide See fluentcpp.com [6] 
+
+```cpp
+template<class T>
+class TextDisplayer
+{
+    public:
+        explicit TextDisplayer(T&& text) : m_text(std::forward<T>(text)) {}
+    private:
+    T m_text;
+};
+template<class T> TextDisplayer(T&&) -> TextDisplayer<T>; // deduction guide
+...
+
+std::string txt = "Hello World";
+TextDisplayer displayer1(txt); // ok
+TextDisplayer displayer2(get_string_from_file()); // error if deduction guide is missing 
+TextDisplayer displayer1("Hello World");    // error if deeduction guide is missing
+```
+
+
+
+  
 
 ## References
 1. https://www.fluentcpp.com/2018/02/06/understanding-lvalues-rvalues-and-their-references/
 2. https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners
 3. https://shaharmike.com/cpp/rvo/
 4. https://www.oreilly.com/library/view/effective-modern-c/9781491908419/item25
+5. https://www.oreilly.com/library/view/effective-modern-c/9781491908419/item27
+6. https://www.fluentcpp.com/2018/07/17/how-to-construct-c-objects-without-making-copies/
+7. https://www.oreilly.com/library/view/effective-modern-c/9781491908419/item26
 
 
