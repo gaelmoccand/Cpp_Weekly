@@ -164,6 +164,7 @@ template<class T>
 class TextDisplayer
 {
     public:
+        // we need to use explicit keyword for single parameter ctor to avoid implicit conversion
         explicit TextBox(const std::string& text) : m_text(text) {} // 1 copy
         explicit TextBox(std::string&& text) : m_text(std::move(text)) {} // no copy only mv
     private:
@@ -183,6 +184,7 @@ class TextDisplayer
     T m_text;
 };
 template<class T> TextDisplayer(T&&) -> TextDisplayer<T>; // deduction guide
+
 ...
 
 std::string txt = "Hello World";
@@ -191,9 +193,6 @@ TextDisplayer displayer2(get_string_from_file()); // error if deduction guide is
 TextDisplayer displayer1("Hello World");    // error if deeduction guide is missing
 ```
 
-
-
-  
 
 ## References
 1. https://www.fluentcpp.com/2018/02/06/understanding-lvalues-rvalues-and-their-references/
