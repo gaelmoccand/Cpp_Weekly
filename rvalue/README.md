@@ -18,6 +18,12 @@
     const int& x = 123; // OK: Lvalue const bound to Rvalue
 ```
 
+
+
+
+
+
+
 ### 2. Rvalue reference, Lvalue the Context matters
 
 Sometimes **Rvalue reference can themselves be Lvalue** (see code snipet below) [1].
@@ -39,6 +45,13 @@ Please note that **std::move** does not move anything but it just casting an Lva
 
     f(std::move(lfs)); // OK: lfs is cast to Rvalue reference
 ```
+
+
+
+
+
+
+
 
 ### 3. RVO and object creation
 
