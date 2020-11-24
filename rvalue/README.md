@@ -16,6 +16,9 @@
     std::string s3 = s1 + s2; // create a temporary object result of + so an Rvalue that must be stored in a Lvalue (s3)
     int& x = 123;       // Error
     const int& x = 123; // OK: Lvalue const bound to Rvalue
+
+    void f(T&& param); // param is universal reference
+    auto&& var2 = var1; // var2 is a universal reference
 ```
 
 

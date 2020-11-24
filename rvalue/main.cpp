@@ -35,7 +35,8 @@ class Vector{
     Vector& operator=( Vector&& vec);
 
     //Vector( Vector&& vec) = delete;
-    //Vector& operator=( Vector&& vec) = delete;
+    //Vector(const Vector& vec) = delete;
+
 
     double& operator[](int i);
     const double& operator[](int i) const;
@@ -54,7 +55,7 @@ Vector::Vector(size_t s)
     m_sz=s;
 }
 
-Vector::Vector(const Vector& other)
+ Vector::Vector(const Vector& other)
 :m_elem{new double[other.m_sz]},m_sz{other.m_sz}            // input const -> left untouched; create a new array with the same size
 {
     std::cout << "copy ctor" << std::endl;
@@ -72,7 +73,7 @@ Vector& Vector::operator=(const Vector& other) // input const -> left untouched
     return *this;                       // by convention a reference to this class is returned
 }
 
-Vector::Vector(Vector&& other)
+ Vector::Vector(Vector&& other)
 :m_elem{other.m_elem},m_sz{other.m_sz}          // steal the data first for the rvalue reference
 {
                                         // no deep copy involved here just moving ressources
@@ -80,7 +81,7 @@ Vector::Vector(Vector&& other)
     other.m_elem = nullptr;               // important to set rvalue ref data to valid state
     other.m_sz = 0;                       // to preven it being accidentally delted when the temporary object dies
 }
-
+ 
 Vector& Vector::operator=(Vector&& other)
 {
     std::cout << "mv assignement" << std::endl;
@@ -127,14 +128,14 @@ Vector factory(size_t s)
 Vector makeVector()
 {
     Vector vec{2};
-    return (vec); // compiler must elide copy OR std:move(vec)
-    //return std::move(vec); // try to use std::move and observer the impact on RVO
+    return vec; // compiler must elide copy OR std:move(vec) 
+    //return std::move(vec); // try to use std::move and observer the impact on RVO with c++11
 }
 
 int main()
 {
 
-    std::cout << "Vector vec1(3); \n";
+/*     std::cout << "Vector vec1(3); \n";
     Vector vec1(3);         // ctor
     vec1[0] = 1;
     vec1[1] = 2;
@@ -158,7 +159,7 @@ int main()
     std::cout << "Vector vec5 = std::move(vec2); \n";
     Vector vec5 = std::move(vec2);// mv ctor 
     //vec2.size();             // NOOOOO MUST not use vec2 anymore vec2 value is unknown !
-    std::cout << std::endl;
+    std::cout << std::endl; */
 
     std::cout << "Vector vec6 = factory(3); \n";
     Vector vec6 = factory(3); // RVO should occur
