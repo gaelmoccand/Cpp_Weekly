@@ -79,17 +79,17 @@ class Vector{
     Vector& operator=(const Vector& vec);   // cp assignment operator
 
     Vector( Vector&& vec);                  // mv ctor
-    Vector& operator=( Vector&& vec);       // cp assignement operator
+    Vector& operator=( Vector&& vec);       // mv assignement operator
 };
 
-Vector factory(size_t s)
+Vector Factory(size_t s)
 {
     return Vector(s);   // RVO to avoid copying Vector local variable
 }
 
 int main()
 {
-    Vector vec = factory(4);
+    Vector vec = Factory(4);
 }
 ```
 
@@ -117,7 +117,7 @@ However you should **NOT try to std::move on local objects** because then the co
 Have a look at this example:
 
 ```cpp
-Widget makeWidget()
+Widget MakeWidget()
 {
     Widget w;
     ...
@@ -130,7 +130,7 @@ RVO does not occur in this case (RVO only performs if what's being returned is a
 Never apply std::move if they would otherwise be eligible for RVO. [4]
 
 ```cpp
-Vector makeVector()
+Vector MakeVector()
 {
     Vector vec{2}; // local variable
     ...
@@ -138,10 +138,10 @@ Vector makeVector()
 }
 
 ```
-Compiler must either elide the copy of vec OR they must treat as if it had been written this way:
+Compiler must either **elide the copy** of vec **OR** they must treat as if it had been **written this way :**
 
 ```cpp
-Vector makeVector()
+Vector MakeVector()
 {
     Vector vec{2}; // local variable
     ...
@@ -182,6 +182,8 @@ See effective modern c++ Item26 [7]
 The goal here is to avoid copy in the ctor. A copy occurs when passing Lvalue to ctor
 but only move is done when a Rvalue is pass.
 
+Copying from an lvalue, moving from an rvalue:
+
 ```cpp
 template<class T>
 class TextDisplayer
@@ -191,11 +193,49 @@ class TextDisplayer
         explicit TextBox(const std::string& text) : m_text(text) {} // 1 copy
         explicit TextBox(std::string&& text) : m_text(std::move(text)) {} // no copy only mv
     private:
-    T m_text;
+        std::string m_text;
+};
+```
+Then we can merge the 2 ctor into 1.
+
+```cpp
+class TextBox
+{
+public:
+    explicit TextBox(std::string text) : m_text(std::move(text)) {}
+private:
+    std::string m_text;
 };
 ```
 
-The solution for C++ 17 is to use so called deduction guide See fluentcpp.com [6] 
+What’s going on here? If we pass it an lvalue, the copy constructor of **std::string** 
+gets called to construct the text parameter (one copy), then text is moved into m_text (no copy).
+
+And if we pass it an rvalue, the move constructor of std::string gets called to construct 
+the text  parameter (no copy), and then text is moved into m_text (no copy).
+
+If we want Referencing an lvalue and moving from an rvalue:
+
+```cpp
+class TextDisplayer
+{
+public:
+   explicit TextDisplayer(const std::string& text) : m_text(text) {}
+private:
+   const std::string& m_text;
+};
+
+std::string txt = "Hello World";
+TextDisplayer displayer1(txt); // ok
+TextDisplayer displayer2(get_string_from_file()); // error invalid reference (destroyed after ctor finished)
+TextDisplayer displayer3("Hello World");    // error invalid reference (destroyed after ctor finished)
+```
+What we really want is for TextDisplayer to hold a reference if we are given an lvalue 
+(that we assume will keep on existing) or alternatively, hold (and own) the full string 
+if given an rvalue (and acquire it by moving from it).
+
+The solution for C++ 17 is to use so called deduction guide See fluentcpp.com [6].
+No copy of the string occured. It is either move or reference the original.
 
 ```cpp
 template<class T>
@@ -213,10 +253,8 @@ template<class T> TextDisplayer(T&&) -> TextDisplayer<T>; // deduction guide
 std::string txt = "Hello World";
 TextDisplayer displayer1(txt); // ok
 TextDisplayer displayer2(get_string_from_file()); // error if deduction guide is missing 
-TextDisplayer displayer1("Hello World");    // error if deeduction guide is missing
+TextDisplayer displayer3("Hello World");    // error if deeduction guide is missing
 ```
-
-
 ## References
 1. https://www.fluentcpp.com/2018/02/06/understanding-lvalues-rvalues-and-their-references/
 2. https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners

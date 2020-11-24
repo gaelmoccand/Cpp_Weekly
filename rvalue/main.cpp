@@ -119,23 +119,23 @@ int Vector::size() const
     return m_sz;
 }
 
-Vector factory(size_t s)
+Vector Factory(size_t s)
 {
     return Vector(s);
 }
 
 
-Vector makeVector()
+Vector MakeVector()
 {
     Vector vec{2};
     return vec; // compiler must elide copy OR std:move(vec) 
-    //return std::move(vec); // try to use std::move and observer the impact on RVO with c++11
+    //return std::move(vec); // try to use std::move and observe the impact on RVO 
 }
 
 int main()
 {
 
-/*     std::cout << "Vector vec1(3); \n";
+    std::cout << "Vector vec1(3); \n";
     Vector vec1(3);         // ctor
     vec1[0] = 1;
     vec1[1] = 2;
@@ -159,18 +159,22 @@ int main()
     std::cout << "Vector vec5 = std::move(vec2); \n";
     Vector vec5 = std::move(vec2);// mv ctor 
     //vec2.size();             // NOOOOO MUST not use vec2 anymore vec2 value is unknown !
-    std::cout << std::endl; */
+    std::cout << std::endl; 
 
     std::cout << "Vector vec6 = factory(3); \n";
-    Vector vec6 = factory(3); // RVO should occur
+    Vector vec6 = Factory(3);   // RVO should occur
     std::cout << std::endl;
 
     std::cout << "vec6 = factory(4); \n";
-    vec6 = factory(4); // RVO should occur
+    vec6 = Factory(4);          // RVO should occur
     std::cout << std::endl;
 
     std::cout << "Vector vec7 = makeVector(); \n";
-    Vector vec7 = makeVector(); // RVO should occur
+    Vector vec7 = MakeVector(); // RVO should occur
+    std::cout << std::endl;
+
+    std::cout << "Vector vec8 = makeVector(); \n";
+    Vector&& vec8 = MakeVector(); // RVO should 
     std::cout << std::endl;
 }
 
