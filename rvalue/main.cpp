@@ -34,6 +34,9 @@ class Vector{
     Vector( Vector&& vec);
     Vector& operator=( Vector&& vec);
 
+    //Vector( Vector&& vec) = delete;
+    //Vector& operator=( Vector&& vec) = delete;
+
     double& operator[](int i);
     const double& operator[](int i) const;
 
@@ -52,7 +55,7 @@ Vector::Vector(size_t s)
 }
 
 Vector::Vector(const Vector& other)
-:m_elem{new double[other.sz]},m_sz{other.sz}            // input const -> left untouched; create a new array with the same size
+:m_elem{new double[other.m_sz]},m_sz{other.m_sz}            // input const -> left untouched; create a new array with the same size
 {
     std::cout << "copy ctor" << std::endl;
     std::copy(other.m_elem, other.m_elem + m_sz, m_elem);   // deep copy is required
@@ -65,12 +68,12 @@ Vector& Vector::operator=(const Vector& other) // input const -> left untouched
     delete[] m_elem;
     m_elem = new double[other.m_sz];
     std::copy(other.m_elem, other.m_elem + other.m_sz, m_elem);
-    m_sz = other.sz;
+    m_sz = other.m_sz;
     return *this;                       // by convention a reference to this class is returned
 }
 
 Vector::Vector(Vector&& other)
-:m_elem{other.m_elem},m_sz{other.sz}          // steal the data first for the rvalue reference
+:m_elem{other.m_elem},m_sz{other.m_sz}          // steal the data first for the rvalue reference
 {
                                         // no deep copy involved here just moving ressources
     std::cout << "mv ctor" << std::endl;
@@ -85,7 +88,7 @@ Vector& Vector::operator=(Vector&& other)
     if (this == &other) return *this;    // check for self assignment
     delete[] m_elem;                      // clean of actual ressource
     m_elem = other.m_elem;
-    m_sz = other.sz;
+    m_sz = other.m_sz;
 
     other.m_elem = nullptr;               // put temp. object in valid state
     other.m_sz = 0;
@@ -124,8 +127,8 @@ Vector factory(size_t s)
 Vector makeVector()
 {
     Vector vec{2};
-    // return (vec); // compiler must elide copy OR std:move(vec)
-    return std::move(vec); // try to use std::move and observer the impact on RVO
+    return (vec); // compiler must elide copy OR std:move(vec)
+    //return std::move(vec); // try to use std::move and observer the impact on RVO
 }
 
 int main()
