@@ -24,18 +24,18 @@ int main() {
     cout << s1  << endl;
     size_t afternum;
     auto numb = std::stoi(s2, &afternum, 10);
-    cout << numb << endl;
-    cout << afternum <<endl;
+    cout << numb ;
+    cout << afternum;
     
     if(isalnum(s2[0]))
     {
-     //   cout << "is al nium" << endl;
+     //   cout <<"is al nium \n";
     }
     
     auto pos = s3.find(':');
     if(pos != string::npos)
     {
-       // cout << "found :" << endl;
+    //   cout << "found :";
     }
     
     std::istringstream strtosplit(s3);
