@@ -139,6 +139,7 @@ Vector MakeVector()
 Compiler must either **elide the copy** of vec **OR** they must treat as if it had been **written this way :**
 
 ```cpp
+// compiler treat as it had been written :
 Vector MakeVector()
 {
     Vector vec{2}; // local variable
@@ -146,6 +147,17 @@ Vector MakeVector()
     return std::move(vec); // treat vec as Rvalue because no copy elision was performed
 }
 ```
+
+Another really bad idea is to write something like this:
+
+```cpp
+Vector&& MakeVectorWrong()
+{
+    Vector vec{2};
+    return std::move(vec); //  warning: function returns address of local variable !!!
+}
+```
+The code compile with a big warning **function returns address of local variable** !!!.
 
 ### 5. Check that types you are using have cheap move operation or no move operation
 
@@ -206,7 +218,7 @@ private:
 };
 ```
 
-What’s going on here? If we pass it an lvalue, the copy constructor of **std::string** 
+Whatâ€™s going on here? If we pass it an lvalue, the copy constructor of **std::string** 
 gets called to construct the text parameter (one copy), then text is moved into m_text (no copy).
 
 And if we pass it an rvalue, the move constructor of std::string gets called to construct 
