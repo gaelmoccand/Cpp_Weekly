@@ -3,7 +3,7 @@
 ### 1. Definitions
 
  - an **Lvalue** denotes an object whose **resource cannot be reused**, which includes most objects that we can think of in code. Lvalues include expressions that designate objects directly by their names but not only.
- - an **Rvalue** denotes an object whose **resource can be reused**, that is to say a **disposable object**. This typically includes temporary objects as they can’t be manipulated at the place they are created and are soon to be destroyed.
+ - an **Rvalue** denotes an object whose **resource can be reused**, that is to say a **disposable object**. This typically includes temporary objects as they cannot be manipulated at the place they are created and are soon to be destroyed.
  - an **Lvalue** reference is a reference that binds to an **Lvalue**
  - an **Rvalue** reference is a reference that binds to an **Rvalue**
  - there can be **Lvalue const** reference binding to an **Rvalue** [1],[2]
@@ -76,6 +76,13 @@ int main()
     Vector vec = factory(4);
 }
 ```
+
+Note though that compilers have different optimization capabilities, and there is no guarantee that the above optimizations will be applied
+ (although this might be enforced in a future version of the standard for some cases). 
+ As a general rule, virtually all compilers apply RVO, and NRVO is applied by most compilers where the function is not too complex ( varies from compiler).
+
+But as a developer, you can always try to faciliate RVO and NRVO by returning only one object from all the return paths of your functions, 
+and by limiting the complexity in the structure of your functions [8].
 ### 4. Apply std::move to rvalue reference being return from fct that return by value but not on local object
 
 Assuming that Matrix type supports move construction, casting lhs to an rvalue in the return statement will then increase efficency 
@@ -125,16 +132,6 @@ Vector makeVector()
     return std::move(vec); // treat vec as Rvalue because no copy elision was performed
 }
 ```
-Same apply for by-value function parameters. 
-They are not eligible for copy elision but compilers will treat them as Rvalue:
-
-```cpp
-Vector makeVector(Vector vec) // by-value parameter of same type as fct return
-{
-    ...
-    return std::move(vec); // treat vec as Rvalue because no copy elision was performed
-}
-```
 
 ### 5. Check that types you are using have cheap move operation or no move operation
 
@@ -151,6 +148,16 @@ Note also that small string optimization (SSO, <= 15 char), stores small strings
 There is also no heap allocation in this SSO case.
 
 ### 6. Avoid overloading on universal reference
+
+If a function template parameter has type **T&&** for a deduced type T, or
+if an object is declared **auto&&** then it is a unviversal reference.
+
+Universal refrence must be initialized. Universal reference correspond to
+rvalue reference when they're init. with rvalues and lvalue references if 
+they are init. with lvalues.
+
+Problem, overloading on universal refernce almost lead to the universal reference 
+overload beaing called more than expected.
 
 See effective modern c++ Item26 [7]
 
@@ -202,5 +209,6 @@ TextDisplayer displayer1("Hello World");    // error if deeduction guide is miss
 5. https://www.oreilly.com/library/view/effective-modern-c/9781491908419/item27
 6. https://www.fluentcpp.com/2018/07/17/how-to-construct-c-objects-without-making-copies/
 7. https://www.oreilly.com/library/view/effective-modern-c/9781491908419/item26
+8. https://www.fluentcpp.com/2016/11/28/return-value-optimizations/
 
 
