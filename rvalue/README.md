@@ -21,12 +21,6 @@
     auto&& var2 = var1; // var2 is a universal reference
 ```
 
-
-
-
-
-
-
 ### 2. Rvalue reference, Lvalue the Context matters
 
 Sometimes **Rvalue reference can themselves be Lvalue** (see code snipet below) [1].
@@ -48,15 +42,19 @@ Please note that **std::move** does not move anything but it just casting an Lva
 
     f(std::move(lfs)); // OK: lfs is cast to Rvalue reference
 ```
-
-
-
-
-
-
-
-
 ### 3. RVO and object creation
+
+There is 2 types of optimization:
+1. RVO (Return Value Optimization)
+2. NRVO (Name Return Value Optimization)
+
+```cpp
+    Vector vec = Factory(4);
+```
+
+The common idea of these 2 optimizations is to allow the compiler to **use the memory space of this object vec**, 
+which is outside the function, to **directly construct the object** being initialized inside the function and that is returned from it. 
+This effectively removes the need for copying intermediary objects.
 
 RVO basically means the compiler is allowed to avoid creating temporary objects for return values, even if they have side effects.[3]
 Without RVO the compiler creates 3 Vector objects instead of only 1 (check belwow the piece of code):

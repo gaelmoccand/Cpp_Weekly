@@ -119,13 +119,13 @@ int Vector::size() const
     return m_sz;
 }
 
-Vector Factory(size_t s)
+Vector MakeVectorRVO(size_t s)
 {
     return Vector(s);
 }
 
 
-Vector MakeVector()
+Vector MakeVectorNRVO()
 {
     Vector vec{2};
     return vec; // compiler must elide copy OR std:move(vec) 
@@ -135,7 +135,7 @@ Vector MakeVector()
 Vector&& MakeVectorWrong()
 {
     Vector vec{2};
-    return std::move(vec); //  g++ warning: function returns address of local variable
+    return std::move(vec); //  warning: function returns address of local variable !!!
 }
 
 int main()
@@ -167,19 +167,19 @@ int main()
     //vec2.size();             // NOOOOO MUST not use vec2 anymore vec2 value is unknown !
     std::cout << std::endl; 
 
-    std::cout << "Vector vec6 = factory(3); \n";
-    Vector vec6 = Factory(3);   // RVO should occur
+    std::cout << "Vector vec6 = MakeVectorRVO(); \n";
+    Vector vec6 = MakeVectorRVO(3);   // RVO should occur
     std::cout << std::endl;
 
-    std::cout << "vec6 = factory(4); \n";
-    vec6 = Factory(4);          // RVO should occur
+    std::cout << "vec6 = MakeVectorRVO(); \n";
+    vec6 = MakeVectorRVO(4);          // RVO should occur
     std::cout << std::endl;
 
-    std::cout << "Vector vec7 = makeVector(); \n";
-    Vector vec7 = MakeVector(); // RVO should occur
+    std::cout << "Vector vec7 = MakeVectorNRVO(); \n";
+    Vector vec7 = MakeVectorNRVO(); // RVO should occur
     std::cout << std::endl;
 
-    std::cout << "Vector vec9 = makeVector(); \n";
+    std::cout << "Vector vec9 = MakeVectorWrong(); \n";
     //auto vec9 = MakeVectorWrong(); // have compilator warning
     //std::cout << vec9.size(); 
     std::cout << std::endl;
