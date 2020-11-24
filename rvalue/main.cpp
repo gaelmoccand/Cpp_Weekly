@@ -132,6 +132,12 @@ Vector MakeVector()
     //return std::move(vec); // try to use std::move and observe the impact on RVO 
 }
 
+Vector&& MakeVectorWrong()
+{
+    Vector vec{2};
+    return std::move(vec); //  g++ warning: function returns address of local variable
+}
+
 int main()
 {
 
@@ -173,8 +179,9 @@ int main()
     Vector vec7 = MakeVector(); // RVO should occur
     std::cout << std::endl;
 
-    std::cout << "Vector vec8 = makeVector(); \n";
-    Vector&& vec8 = MakeVector(); // RVO should 
+    std::cout << "Vector vec9 = makeVector(); \n";
+    //auto vec9 = MakeVectorWrong(); // have compilator warning
+    //std::cout << vec9.size(); 
     std::cout << std::endl;
 }
 
