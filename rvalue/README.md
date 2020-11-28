@@ -7,6 +7,7 @@
  - an **Lvalue** reference is a reference that binds to an **Lvalue**
  - an **Rvalue** reference is a reference that binds to an **Rvalue**
  - there can be **Lvalue const** reference binding to an **Rvalue** [1],[2]
+ - Scott Meyer call universal reference **T&&** or **auto&&**. Universal references correspond to Rvalue if they'are initialized with Rvalue. They correspond to Lvalue references if they'are initialized with Lvalue.
 
 
 ```cpp
