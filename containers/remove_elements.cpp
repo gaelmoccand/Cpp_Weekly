@@ -81,4 +81,7 @@ int main() {
     auto divisibleBy3 = [](auto const& elem) { return (elem % 3) == 0; };
     experimental::erase_if(myvec, divisibleBy3);
     disp(myvec);
+
+
+    std::map<int,int> mymap{{1,2},{2,2},{3,3}};
 }
