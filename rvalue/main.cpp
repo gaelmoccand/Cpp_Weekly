@@ -129,7 +129,7 @@ Vector MakeVectorNRVO()
 {
     Vector vec{2};
     return vec; // compiler must elide copy OR std:move(vec) 
-    //return std::move(vec); // try to use std::move and observe the impact on RVO 
+    //return std::move(vec); // try to use std::move and observe the impact on RVO -> warning with gcc
 }
 
 Vector&& MakeVectorWrong()
