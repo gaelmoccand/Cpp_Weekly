@@ -62,7 +62,7 @@ int main() {
     erase(mystr,'s');               
     cout << mystr << "\n";
 
-    // 3. remove element with predicate using 
+    // 3. remove element with predicate using  < C++20
     // The most practical use for remove and remove_if is to remove elements from a range.
 
     auto negativeNumber = [](auto const & elem) { return elem < 0;};

@@ -23,9 +23,9 @@ int main() {
     
     auto evenKey = [](auto const& elem){ auto const [key, val] = elem; return key % 2 == 0;};
 
-    // remove evenKey using loop < C++20
+    // trick to remove evenKey using loop < C++20
     cout << "for loop" << "\n";
-    for(auto it = mymap.begin(); it != mymap.end(); /*no increamenthere*/) {
+    for(auto it = mymap.begin(); it != mymap.end(); /*not increament here*/) {
         if(evenKey(*it)) {
             it = mymap.erase(it); // erase returns the iter. following the removed elements
         }
