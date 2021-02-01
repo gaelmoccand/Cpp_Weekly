@@ -21,12 +21,12 @@ int main() {
     cout << "mymap" << "\n";
     disp(mymap);
     
-    auto evenKey = [](auto const& elem){ auto const [key, val] = elem; return key % 2 == 0;};
+    auto predEvenKey = [](auto const& elem){ auto const [key, val] = elem; return key % 2 == 0;};
 
     // trick to remove evenKey using loop < C++20
     cout << "for loop" << "\n";
     for(auto it = mymap.begin(); it != mymap.end(); /*not increament here*/) {
-        if(evenKey(*it)) {
+        if(predEvenKey(*it)) {
             it = mymap.erase(it); // erase returns the iter. following the removed elements
         }
         else {
@@ -38,7 +38,7 @@ int main() {
 
     // remove evenKey using erase_if C++20
     cout << "erase_if(mymap,evenKey)" << "\n";
-    std::experimental::erase_if(mymap,evenKey);
+    std::experimental::erase_if(mymap, predEvenKey);
     disp(mymap);
     
 
