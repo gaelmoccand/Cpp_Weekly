@@ -102,7 +102,7 @@ assert(inserted == false);
 
 Amazing cheat sheet from https://www.walletfox.com/course/cheatsheets_cpp.php
 
-<img src="https://www.walletfox.com/course/cheatsheetsSource/stdmap_tryemplace_insertorassign_corr.pn" width="150" height="150">
+<img src="https://www.walletfox.com/course/cheatsheetsSource/stdmap_tryemplace_insertorassign_corr.png" width="150" height="150">
 
 ## 2. Remove elements in sequence container
 
