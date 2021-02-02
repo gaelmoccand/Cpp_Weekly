@@ -161,7 +161,7 @@ mystr.erase(std::remove(begin(mystr), end(mystr), '!'), end(mystr));
 ```
 ### 2.3 Remove element with a predicate
 
-Untill C++17 we still use the erase remove Idiom for a predicate as well
+Untill C++17 we still use the erase remove Idiom for a predicate as well.
 
 ```cpp
 auto negativeNumber = [](auto const & elem) { return elem < 0;};
@@ -179,7 +179,7 @@ myvec.erase(std::unique(myvec.begin(),myvec.end()),myvec.end());
 
 ### 2.5 The C++20 way to remove element
 
-Convenient erase and erase_if finally available in C++20. Yeah !
+Convenient erase and erase_if finally available in C++20. Yeah ! [6]
 
 ```cpp
 experimental::erase(myvec, 8);
@@ -191,6 +191,8 @@ cout << "erase value divisible by 3 in  C++ 20 \n";
 ```
 
 ## 3. Remove elements in associative containers
+
+Associative containers can be maps & set and their flavor unordered and multi
 
 * How to remove the elements at a given position (or between two given positions),
 * How to remove the elements equivalent to a certain value,
@@ -249,7 +251,7 @@ Write your code this way:
 ```
 ## 3.3 Remove element that satisfy a predicate with C++20
 
-From C++20 we can use erase_if. Much better now !
+From C++20 we can use erase_if. Much better now ! [5]
 
 ```cpp
    // remove using predicates evenKey with erase_if C++20
@@ -263,5 +265,7 @@ From C++20 we can use erase_if. Much better now !
 2. https://www.oreilly.com/library/view/effective-modern-c/9781491908419/item42
 3. https://www.fluentcpp.com/2018/09/14/how-to-remove-elements-from-a-sequence-container
 4. https://www.fluentcpp.com/2018/09/21/remove-elements-associative-container-cpp/
+5. https://en.cppreference.com/w/cpp/container/map/erase_if
+6. https://en.cppreference.com/w/cpp/container/vector/erase2
 
 
