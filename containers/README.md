@@ -190,9 +190,78 @@ experimental::erase_if(myvec, divisibleBy3);
 cout << "erase value divisible by 3 in  C++ 20 \n";
 ```
 
+## 3. Remove elements in associative containers
+
+* How to remove the elements at a given position (or between two given positions),
+* How to remove the elements equivalent to a certain value,
+* How to remove the elements satisfying a certain predicate,
+* [How to remove duplicates in associative containers](https://www.fluentcpp.com/2018/09/25/remove-duplicates-associative-container-cpp/)
+## 3.1 Remove elements at a position
+
+```cpp
+myvec.erase(position);
+```
+removes the entry at that position.
+
+And:
+
+```cpp
+myvec.erase(first, last);
+```
+removes all the entries between first (included) and last (not included).
+
+## 3.2 Remove element equivalent to a specific key 
+
+Piece of cake !
+
+```cpp
+myvec.erase(myKey);
+```
+
+To remove an elemement of a certain value then we have to use predicates. 
+It is a bit more complicated.
+
+## 3.2 Remove element that satisfy a predicate
+In a vector we can simply use std::remove_if. It is not possible with associative containers.
+Associative containers have stronger constraints[4]: 
+* must find keys pretty fast (in O(log(n)) for non-hash and O(1) for hash).
+
+So it is not possible to just shuffle the elements like std::remove_if does,
+otherwise we would break the internal (Tree or table).
+
+We need to use the interface and must be carefull to not invalidate the iterator (using erase) before incrementing it !
+
+Write your code this way: 
+
+```cpp
+    map<int,int> mymap {{1,10},{2,20}};    
+    auto predEvenKey = [](auto const& elem){ auto const [key, val] = elem; return key % 2 == 0;};
+    // trick to remove evenKey using loop < C++20
+    for(auto it = mymap.begin(); it != mymap.end(); /*not increament here*/) {
+        if(predEvenKey(*it)) {
+            it = mymap.erase(it); // erase returns the iter. following the removed elements
+        }
+        else {
+            ++it;
+        }
+
+    }
+```
+## 3.3 Remove element that satisfy a predicate with C++20
+
+From C++20 we can use erase_if. Much better now !
+
+```cpp
+   // remove using predicates evenKey with erase_if C++20
+    auto predEvenKey = [](auto const& elem){ auto const [key, val] = elem; return key % 2 == 0;};
+    std::experimental::erase_if(mymap, predEvenKey);
+```
+
 
 ## References
 1. https://www.fluentcpp.com/2018/12/11/overview-of-std-map-insertion-emplacement-methods-in-cpp17/
 2. https://www.oreilly.com/library/view/effective-modern-c/9781491908419/item42
 3. https://www.fluentcpp.com/2018/09/14/how-to-remove-elements-from-a-sequence-container
+4. https://www.fluentcpp.com/2018/09/21/remove-elements-associative-container-cpp/
+
 
