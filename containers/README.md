@@ -100,6 +100,10 @@ auto [it, inserted] = phoneBook.insert_or_assign("Mary", 666);
 assert(inserted == false);
 ```
 
+Amazing cheat sheet from https://www.walletfox.com/course/cheatsheets_cpp.php
+
+![Cheatsheet](https://www.walletfox.com/course/cheatsheetsSource/stdmap_tryemplace_insertorassign_corr.png)
+
 ## 2. Remove elements in sequence container
 
 Sequence container can be **vector, string, deque, list**
