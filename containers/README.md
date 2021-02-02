@@ -2,7 +2,7 @@
 ## 1. Add element in a map
 ### 1.1 Overview for map  
 Here is the overview of  different methods:
-It is divided in 2 columns: 1st one overwite value if element already present, the 2nd does not
+It is divided in 2 columns: 1st one **overwite value** if element already present, the 2nd does not
  ![insert_emplace](https://www.fluentcpp.com/wp-content/uploads/2018/11/insertion_methods1.png)
 
 ### 1.2  operator[] VS insert()
@@ -30,7 +30,20 @@ auto[it, ins] = m.insert({2, "Anna"});
  * operator[] requires a DefaultConstructible "value_type", which means that if the default constructor is explicitly or implicitly disabled,
   the code won’t compile.
 
+### 1.3  emplace()
+* C++11 introduced **emplace()** which has the same functionality as **insert()** but it enables in-place construction.
+In-place construction is a technique that bypasses construction and destruction of temporaries by constructing the objects directly in the map [1].
 
+struct A
+{
+    std::string name;
+    int age;
+    ...
+}
+
+Scott Meyers is in favor of **emplace()** and other experts like Bjarne and [Abseil](https://abseil.io/tips/112) are in favor of insert() for safety reason 
 
 ## References
 1. https://www.fluentcpp.com/2018/12/11/overview-of-std-map-insertion-emplacement-methods-in-cpp17/
+2. https://www.oreilly.com/library/view/effective-modern-c/9781491908419/item42
+
