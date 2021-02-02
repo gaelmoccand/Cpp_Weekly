@@ -19,11 +19,12 @@ void erase(std::string& str, const char elem)
 
 void disp(const std::vector<int>& vec)
 {
+    std::cout << "{";
     for(const auto& el : vec )
     {
-        std::cout << el;
+        std::cout << el << " ,";
     }
-    std::cout << "\n";
+    std::cout << "}\n";
 }
 
 int main() {
@@ -68,18 +69,22 @@ int main() {
     auto negativeNumber = [](auto const & elem) { return elem < 0;};
     auto it = std::remove_if(myvec.begin(), myvec.end(), negativeNumber);
     myvec.erase(it, myvec.end());
+    cout << "remove all negative Number \n";
     disp(myvec);
 
     // 4. remove adjacent duplicates using unique
 
     myvec.erase(std::unique(myvec.begin(),myvec.end()),myvec.end());
+    cout << "remove adjacent dulpicates \n";
     disp(myvec);
 
     // 5. erase and erase_if finally available in C++20
     experimental::erase(myvec,8);
+    cout << "erase value 8 in  C++ 20 \n";
     disp(myvec);
 
     auto divisibleBy3 = [](auto const& elem) { return (elem % 3) == 0; };
     experimental::erase_if(myvec, divisibleBy3);
+    cout << "erase value divisible by 3 in  C++ 20 \n";
     disp(myvec);
 }
