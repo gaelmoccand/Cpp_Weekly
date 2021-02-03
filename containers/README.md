@@ -158,6 +158,10 @@ auto iter = std::remove(begin(myvec), end(myvec), 6);
 myvec.erase(iter, end(myvec));
 mystr.erase(std::remove(begin(mystr), end(mystr), '!'), end(mystr)); // in 1 line
 ```
+
+Note for a **list** just use _mylist.remove(42)_
+
+Indeed, since it does not offer random-access iterators, using the algorithm std::remove on a list would make list even slower than it already is.
 ### 2.3 Remove element with a predicate
 
 Untill C++17 we still use the erase remove Idiom for a predicate as well using _std::remove_if_.
