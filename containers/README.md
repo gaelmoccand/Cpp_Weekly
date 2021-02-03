@@ -122,7 +122,7 @@ This is the most simple way to remove an element
 // 1. remove element at specific position
 myvec.erase(myvec.begin() + 1);
 // for a subrange (important for next point)
-myvec.erase(myvec.begin(), myvec.begin()+2); // erase the first 2 element of myvec
+myvec.erase(myvec.begin(), myvec.begin() + 2); // erase the first 2 element of myvec
 ```
 Like all the STL ranges represented by iterators:
 * 1st arg. is included in the subrange.
@@ -149,10 +149,10 @@ Note that the values of the elements left at the end of the range are unspecifie
 A bit like std::move doesn’t move , **_std::remove_ doesn’t remove**. 
 
 So we need to use the erase & remove C++ idiom.
-The elements to remove are in the range defined by the iterator **returned by _std::_remove_** and the end of the collection.
+The elements to remove are in the range defined by the iterator **returned by _std::remove_** and the end of the collection.
 ```cpp
-vector<int> myvec{1,2,3,4,5,6,7,8,8,9,9,-1,-2};
-string mystr{"Hi Folks !  !"};
+vector<int> myvec{1, 2, 3, 4, 5, 6, 7, 8, 8, 9, 9, -1, -2};
+string mystr{"Hi Folks !!"};
 // using erase_remove C++ idiom
 auto iter = std::remove(begin(myvec), end(myvec), 6);
 myvec.erase(iter, end(myvec));
@@ -194,7 +194,7 @@ cout << "erase value divisible by 3 in  C++ 20 \n";
 
 ## 3. Remove elements in associative containers
 
-Associative containers can be maps & set and their flavor unordered and multi
+Associative containers can be maps & sets and their different types likee unordered and multi
 
 * How to remove the elements at a given position (or between two given positions),
 * How to remove the elements equivalent to a certain value,
@@ -235,10 +235,10 @@ otherwise we would break the internal (Tree or table).
 
 We need to use the interface and must be carefull to not invalidate the iterator (using erase) before incrementing it !
 
-Write your code this way: 
+Neetd to write code this way: 
 
 ```cpp
-map<int,int> mymap {{1,10},{2,20}};    
+map<int,int> mymap {{1, 10},{2, 20}};    
 auto predEvenKey = [](auto const& elem){ auto const [key, val] = elem; return key % 2 == 0;};
 // trick to remove evenKey using loop < C++20
 for(auto it = mymap.begin(); it != mymap.end(); /*not increament here*/) {
@@ -252,7 +252,7 @@ for(auto it = mymap.begin(); it != mymap.end(); /*not increament here*/) {
 ```
 ## 3.3 Remove element that satisfy a predicate with C++20
 
-From C++20 we can use erase_if. Much better now ! [5]
+From C++20  **_erase_if_** can be used. It is clearer now ! [5]
 
 ```cpp
 // remove using predicates evenKey with erase_if C++20
