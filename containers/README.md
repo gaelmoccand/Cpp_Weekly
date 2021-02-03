@@ -122,11 +122,11 @@ This is the most simple way to remove an element
 // 1. remove element at specific position
 myvec.erase(myvec.begin() + 1);
 // for a subrange (important for next point)
-myvec.erase(myvec.begin(), myvec.begin()+2); // erase the first 2 el.
+myvec.erase(myvec.begin(), myvec.begin()+2); // erase the first 2 element of myvec
 ```
 Like all the STL ranges represented by iterators:
-* first arg. is included 
-* 2nd arg. is not included in the subrange. It points to the “past-the-end” element, like for instance myvec.end()
+* 1st arg. is included in the subrange.
+* 2nd arg. is not included in the subrange. It points to the “past-the-end” element, like for instance myvec.end().
 
 Note that for vector and string, all iterators pointing to elements at and after the one removed are invalidated. 
 Indeed, all those elements have been shifted up by the call to erase [3].
@@ -146,22 +146,21 @@ Check std::remove(myvec.begin(), myvec.end(), 42);
 ![remove](https://www.fluentcpp.com/wp-content/uploads/2018/01/remove2.png)
 
 Note that the values of the elements left at the end of the range are unspecified.
-A bit like std::move doesn’t move and std::forward doesn’t forward, **std::remove doesn’t remove**. 
+A bit like std::move doesn’t move , **_std::remove_ doesn’t remove**. 
 
 So we need to use the erase & remove C++ idiom.
-The elements to remove are in the range defined by the iterator returned by std::remove and the end of the collection.
+The elements to remove are in the range defined by the iterator **returned by _std::_remove_** and the end of the collection.
 ```cpp
 vector<int> myvec{1,2,3,4,5,6,7,8,8,9,9,-1,-2};
 string mystr{"Hi Folks !  !"};
 // using erase_remove C++ idiom
 auto iter = std::remove(begin(myvec), end(myvec), 6);
 myvec.erase(iter, end(myvec));
-disp(myvec);
-mystr.erase(std::remove(begin(mystr), end(mystr), '!'), end(mystr));
+mystr.erase(std::remove(begin(mystr), end(mystr), '!'), end(mystr)); // in 1 line
 ```
 ### 2.3 Remove element with a predicate
 
-Untill C++17 we still use the erase remove Idiom for a predicate as well.
+Untill C++17 we still use the erase remove Idiom for a predicate as well using _std::remove_if_.
 
 ```cpp
 auto negativeNumber = [](auto const & elem) { return elem < 0;};
@@ -171,9 +170,11 @@ myvec.erase(it, myvec.end());
 
 ### 2.4 remove adjacent duplicates using unique
 
-**std::unique** only removes adjacent duplicates, and not duplicates in the collection as a whole. It has a linear complexity.
+_std::unique_ only removes adjacent duplicates, and not duplicates in the collection as a whole. 
+It has a linear complexity.
 
 ```cpp
+vector<int> myvec{1,2,3,4,5,6,7,8,8,9,9,-1,-2};
 myvec.erase(std::unique(myvec.begin(),myvec.end()),myvec.end());
 ```
 
@@ -182,6 +183,7 @@ myvec.erase(std::unique(myvec.begin(),myvec.end()),myvec.end());
 Convenient erase and erase_if finally available in C++20. Yeah ! [6]
 
 ```cpp
+vector<int> myvec{1,2,3,4,5,6,7,8,8,9,9,-1,-2};
 experimental::erase(myvec, 8);
 cout << "erase value 8 in C++ 20 \n";
 
@@ -236,27 +238,26 @@ We need to use the interface and must be carefull to not invalidate the iterator
 Write your code this way: 
 
 ```cpp
-    map<int,int> mymap {{1,10},{2,20}};    
-    auto predEvenKey = [](auto const& elem){ auto const [key, val] = elem; return key % 2 == 0;};
-    // trick to remove evenKey using loop < C++20
-    for(auto it = mymap.begin(); it != mymap.end(); /*not increament here*/) {
-        if(predEvenKey(*it)) {
-            it = mymap.erase(it); // erase returns the iter. following the removed elements
-        }
-        else {
-            ++it;
-        }
-
+map<int,int> mymap {{1,10},{2,20}};    
+auto predEvenKey = [](auto const& elem){ auto const [key, val] = elem; return key % 2 == 0;};
+// trick to remove evenKey using loop < C++20
+for(auto it = mymap.begin(); it != mymap.end(); /*not increament here*/) {
+    if(predEvenKey(*it)) {
+        it = mymap.erase(it); // erase returns the iter. following the removed elements
     }
+    else {
+        ++it;
+    }
+}
 ```
 ## 3.3 Remove element that satisfy a predicate with C++20
 
 From C++20 we can use erase_if. Much better now ! [5]
 
 ```cpp
-   // remove using predicates evenKey with erase_if C++20
-    auto predEvenKey = [](auto const& elem){ auto const [key, val] = elem; return key % 2 == 0;};
-    std::experimental::erase_if(mymap, predEvenKey);
+// remove using predicates evenKey with erase_if C++20
+auto predEvenKey = [](auto const& elem){ auto const [key, val] = elem; return key % 2 == 0;};
+std::experimental::erase_if(mymap, predEvenKey);
 ```
 
 
