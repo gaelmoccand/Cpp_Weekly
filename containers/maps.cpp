@@ -48,7 +48,7 @@ int main() {
     // doesn't generate a redundant object & does not steals argument when insertation failed
     // try_emplace() makes sure that the argument remains untouched in case it wasn’t inserted (unique_ptr())
     phone_book.try_emplace("Ben", 47);
-    phone_book.try_emplace("Ben", 47); // do not overwrite
+    phone_book.try_emplace("Ben", 8); // do not overwrite
     cout << "try_emplace(\"Ben\", 47) : \n"; 
     disp(phone_book);
 
