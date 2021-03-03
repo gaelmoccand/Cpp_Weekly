@@ -146,7 +146,9 @@ Check std::remove(myvec.begin(), myvec.end(), 42);
 ![remove](https://www.fluentcpp.com/wp-content/uploads/2018/01/remove2.png)
 
 Note that the values of the elements left at the end of the range are unspecified.
-A bit like std::move doesn’t move , **_std::remove_ doesn’t remove**. 
+A bit like std::move doesn’t move , **_std::remove_ doesn’t remove**.
+
+Indeed, bearing in mind that, in the design of the STL, algorithms interact only with iterators, and not directly with the container, the container is not aware of the effect of the algorithm. For instance its size has not been reduced.
 
 So we need to use the erase & remove C++ idiom.
 The elements to remove are in the range defined by the iterator **returned by _std::remove_** and the end of the collection.
