@@ -7,7 +7,7 @@ It is divided in 2 columns: 1st one **overwite value** if element already presen
 
 ### 1.2  operator[] VS insert()
  * Operator[] differs from insert() in how it handles a situation when an element with the given key already exists in the map. 
- * While operator[] simply overwrites the corresponding value, insert() doesnít [1].
+ * While operator[] simply overwrites the corresponding value, insert() doesn‚Äôt [1].
 
 ```cpp
 // C++11 style 
@@ -28,7 +28,7 @@ assert(m.at(1) == "Anna");
 auto[it, ins] = m.insert({2, "Anna"});
 ```
  * operator[] requires a DefaultConstructible "value_type", which means that if the default constructor is explicitly or implicitly disabled,
-  the code wonít compile.
+  the code won‚Äôt compile.
 
 ### 1.3  emplace() 
 C++11 introduced **emplace()** which has the same functionality as **insert()** but it enables in-place construction.
@@ -53,7 +53,7 @@ Scott Meyers is in favor of **emplace()** and other experts like Bjarne and [Abs
 
 ### 1.4 try_emplace()
 
-**try_emplace()** is a safer successor of insert() or emplace(). In line with insert() and emplace(), try_emplace() doesnít modify values for already inserted elements. 
+**try_emplace()** is a safer successor of insert() or emplace(). In line with insert() and emplace(), try_emplace() doesn‚Äôt modify values for already inserted elements. 
 However, it prevents stealing from original arguments that happens both with insert() and emplace() in case of a failed insertion [1].
 ```cpp
 auto m = std::map<int, std::unique_ptr<A>> {};
@@ -66,7 +66,7 @@ m.emplace(1, std::move(p)); // but steals arguments
 assert(p != nullptr); // this will most likely fail
 ```
 
-try_emplace() makes sure that the argument remains untouched in case it wasnít inserted:
+try_emplace() makes sure that the argument remains untouched in case it wasn‚Äôt inserted:
 
 ```cpp
 m.try_emplace(1, std::move(p));
@@ -88,8 +88,8 @@ m.try_emplace(1, "Ben", 47);
 
 ### 1.5 insert_or_assign
 
-**insert_or_assign()** is a ìsmarterî successor of operator[]. Just like operator[] it modifies values if supplied with a key that is already present in the map.
- However, unlike operator[], insert_or_assign() doesnít require default constructibility of the value_type [1]. 
+**insert_or_assign()** is a ‚Äúsmarter‚Äù successor of operator[]. Just like operator[] it modifies values if supplied with a key that is already present in the map.
+ However, unlike operator[], insert_or_assign() doesn‚Äôt require default constructibility of the value_type [1]. 
  It also returns a **pair<iterator, bool>**. 
  * The bool is true when insertion took place and false in case of assignment.
 
@@ -126,14 +126,14 @@ myvec.erase(myvec.begin(), myvec.begin() + 2); // erase the first 2 element of m
 ```
 Like all the STL ranges represented by iterators:
 * 1st arg. is included in the subrange.
-* 2nd arg. is not included in the subrange. It points to the ìpast-the-endî element, like for instance myvec.end().
+* 2nd arg. is not included in the subrange. It points to the ‚Äúpast-the-end‚Äù element, like for instance myvec.end().
 
 Note that for vector and string, all iterators pointing to elements at and after the one removed are invalidated. 
 Indeed, all those elements have been shifted up by the call to erase [3].
 
 ### 2.2 Remove element for a certain value
 
-Until C++20 vector, deque, string containers donít have a method to remove a value so we must use the algo **std::remove**. 
+Until C++20 vector, deque, string containers don‚Äôt have a method to remove a value so we must use the algo **std::remove**. 
 This algorithm takes a range and a value to remove, and shifts up all the elements that are to be kept [3].
 
 check this code and the figure below
@@ -146,7 +146,7 @@ Check std::remove(myvec.begin(), myvec.end(), 42);
 ![remove](https://www.fluentcpp.com/wp-content/uploads/2018/01/remove2.png)
 
 Note that the values of the elements left at the end of the range are unspecified.
-A bit like std::move doesnít move , **_std::remove_ doesnít remove**. 
+A bit like std::move doesn‚Äôt move , **_std::remove_ doesn‚Äôt remove**. 
 
 So we need to use the erase & remove C++ idiom.
 The elements to remove are in the range defined by the iterator **returned by _std::remove_** and the end of the collection.
@@ -204,7 +204,8 @@ Associative containers can be maps & sets and their different types likee unorde
 * How to remove the elements equivalent to a certain value,
 * How to remove the elements satisfying a certain predicate,
 * [How to remove duplicates in associative containers](https://www.fluentcpp.com/2018/09/25/remove-duplicates-associative-container-cpp/)
-## 3.1 Remove elements at a position
+
+### 3.1 Remove elements at a position
 
 ```cpp
 myvec.erase(position);
@@ -218,7 +219,7 @@ myvec.erase(first, last);
 ```
 removes all the entries between first (included) and last (not included).
 
-## 3.2 Remove element equivalent to a specific key 
+### 3.2 Remove element equivalent to a specific key 
 
 Piece of cake !
 
@@ -229,7 +230,7 @@ myvec.erase(myKey);
 To remove an elemement of a certain value then we have to use predicates. 
 It is a bit more complicated.
 
-## 3.2 Remove element that satisfy a predicate
+### 3.2 Remove element that satisfy a predicate
 In a vector we can simply use std::remove_if. It is not possible with associative containers.
 Associative containers have stronger constraints[4]: 
 * must find keys pretty fast (in O(log(n)) for non-hash and O(1) for hash).
@@ -254,7 +255,7 @@ for(auto it = mymap.begin(); it != mymap.end(); /*not increament here*/) {
     }
 }
 ```
-## 3.3 Remove element that satisfy a predicate with C++20
+### 3.3 Remove element that satisfy a predicate with C++20
 
 From C++20  **_erase_if_** can be used. It is clearer now ! [5]
 
