@@ -93,5 +93,5 @@ int main() {
     auto divisibleBy3 = [](auto const& elem) { return (elem % 3) == 0; };
     experimental::erase_if(myvec, divisibleBy3);
     cout << "erase value divisible by 3 in  C++ 20 \n";
-    disp(myvec); cout << "\n\n";
+    disp(myvec);
 }

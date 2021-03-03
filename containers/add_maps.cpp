@@ -46,14 +46,14 @@ int main() {
     disp(phone_book);
 
     // doesn't generate a redundant object & does not steals argument when insertation failed
-    // try_emplace() makes sure that the argument remains untouched in case it wasn’t inserted (unique_ptr())
+    // try_emplace() makes sure that the argument remains untouched in case it wasnâ€™t inserted (unique_ptr())
     phone_book.try_emplace("Ben", 47);
     phone_book.try_emplace("Ben", 8); // do not overwrite
     cout << "try_emplace(\"Ben\", 47) : \n"; 
     disp(phone_book);
 
     // like [] it modifies values if supplied with a key that is already present in the map
-    // It doesn’t require default constructibility of the value_type
+    // It doesnâ€™t require default constructibility of the value_type
     // returns a pair<iterator, bool> 
     auto [it, insert] = phone_book.insert_or_assign("Ben", 4864654); // overwrite value
     assert(insert == false);
