@@ -161,9 +161,21 @@ myvec.erase(iter, end(myvec));
 mystr.erase(std::remove(begin(mystr), end(mystr), '!'), end(mystr)); // in 1 line
 ```
 
+#### 2.2.1 Remove element in a std::list
+
 Note for a **list** just use _mylist.remove(42)_
 
 Indeed, since it does not offer random-access iterators, using the algorithm std::remove on a list would make list even slower than it already is.
+
+std::list<T,Allocator>::remove Complexity is Linear in the size of the container 
+
+#### 2.2.2 Remove complexity
+std::remove & std::remove_if
+EComplexity equal exactly std::distance(first, last) applications of the predicate. 
+
+std::vector<T,Allocator>::erase
+Complexity is Linear: the number of calls to the destructor of T is the same as the number of elements erased, the assignment operator of T is called the number of times equal to the number of elements in the vector after the erased elements 
+
 ### 2.3 Remove element with a predicate
 
 Untill C++17 we still use the erase remove Idiom for a predicate as well using _std::remove_if_.
@@ -197,6 +209,10 @@ auto divisibleBy3 = [](auto const& elem) { return (elem % 3) == 0; };
 experimental::erase_if(myvec, divisibleBy3);
 cout << "erase value divisible by 3 in  C++ 20 \n";
 ```
+
+### 2.5.1 Complexity
+
+Exactly N applications of the corresponding predicate and any projection, where N = (last - first), and N-1 move operations at worst. 
 
 ## 3. Remove elements in associative containers
 
