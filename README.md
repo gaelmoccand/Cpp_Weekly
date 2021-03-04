@@ -1,4 +1,4 @@
-# Cpp daily 
+# Cpp Weekly
 Objective is to present, share and dicuss Modern Cpp features, best practice and more
 
 ## Iterate for containers
