@@ -31,7 +31,7 @@ int main() {
     using namespace std;
 
 
-    vector<int> myvec{1,2,3,4,5,6,7,8,8,9,9,-1,-2};
+    vector<int> myvec{1, 2, 3, 4, 5, 6, 7, 8, 8, 9, 9, -1, -2, 7};
     string mystr{"Hi Folks !  !"};
 
     disp(myvec);
