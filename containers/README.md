@@ -192,7 +192,7 @@ _std::unique_ only removes adjacent duplicates, and not duplicates in the collec
 It has a linear complexity.
 
 ```cpp
-vector<int> myvec{1,2,3,4,5,6,7,8,8,9,9,-1,-2};
+vector<int> myvec{1, 2, 3, 4, 5, 6, 7, 8, 8, 9, 9, -1, -2};
 myvec.erase(std::unique(myvec.begin(),myvec.end()),myvec.end());
 ```
 
@@ -201,7 +201,7 @@ myvec.erase(std::unique(myvec.begin(),myvec.end()),myvec.end());
 Convenient erase and erase_if finally available in C++20. Yeah ! [6]
 
 ```cpp
-vector<int> myvec{1,2,3,4,5,6,7,8,8,9,9,-1,-2};
+vector<int> myvec{1, 2, 3, 4, 5, 6, 7, 8, 8, 9, 9, -1, -2};
 experimental::erase(myvec, 8);
 cout << "erase value 8 in C++ 20 \n";
 
@@ -248,6 +248,8 @@ myvec.erase(myKey);
 To remove an elemement of a certain value then we have to use predicates. 
 It is a bit more complicated.
 
+### 
+
 ### 3.2 Remove element that satisfy a predicate
 In a vector we can simply use std::remove_if. It is not possible with associative containers.
 Associative containers have stronger constraints[4]: 
@@ -282,7 +284,16 @@ From C++20  **_erase_if_** can be used. It is clearer now ! [5]
 auto predEvenKey = [](auto const& elem){ auto const [key, val] = elem; return key % 2 == 0;};
 std::experimental::erase_if(mymap, predEvenKey);
 ```
+### 3.4 Remove complexity 
 
+```cpp
+1) iterator erase( iterator pos );
+    Complexity: Amortized constant
+2) void erase( iterator first, iterator last );
+    Complexity:  log(mymap.size()) + std::distance(first, last)
+3) size_type erase( const key_type& key );
+    Complexity: log(mymap.size()) + mymap.count(key)
+```
 
 ## References
 1. https://www.fluentcpp.com/2018/12/11/overview-of-std-map-insertion-emplacement-methods-in-cpp17/
