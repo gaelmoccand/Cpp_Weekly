@@ -1,5 +1,45 @@
 # How to add and remove element in contigous and associative container
-## 1. Add element in a map
+
+## 0. Add elements in a vector
+
+### 0.1 using operator[] vs at() vs insert()
+
+Let' start with **operator[]**. It is simple and return the element at the specified postion.
+However it does not guarantee range checking !!! 
+```cpp
+    vector<int> v1 = {1, 10, 20, 5, 40, 50}; 
+    v1[0] = 11;
+    v1[1] += 2; // modify directly
+    v1[2]++;
+    cout << v1[6] // boom No out of range check !! Undefined behavior
+```
+A safer alternative is to use **at()**. You must then catch the an exception otherwise the program will terminate
+```cpp
+try {
+    v1.at(0) = 10;
+    v1.at(7) = 10;
+}
+catch(const std::exception& e) {
+    std::cerr << e.what() << '\n';
+}
+```
+
+Another option is to use **insert()**. Important difference is it does not overwrite.
+Vector is extended by inserting new elements before the element at the specified position effectively increasing the container size by the number of elements inserted. It returns an iterator that points to the first of the newly inserted elements.
+```cpp
+    auto it = v1.insert(v1.end(), 3);
+    it = v1.insert(v1.end(), 4, 1); // fill up with 1 values 4 times
+```
+
+This is an expensive operation if not insert at the **end()** it cause container to relocate all the elements that were after position to their new positions.
+
+### 0.2 how to copy elements 
+
+
+
+
+
+## 1. Add elements in a map
 ### 1.1 Overview for map  
 Here is the overview of  different methods:
 It is divided in 2 columns: 1st one **overwite value** if element already present, the 2nd does not
@@ -7,7 +47,7 @@ It is divided in 2 columns: 1st one **overwite value** if element already presen
 
 ### 1.2  operator[] VS insert()
  * Operator[] differs from insert() in how it handles a situation when an element with the given key already exists in the map. 
- * While operator[] simply overwrites the corresponding value, insert() doesn’t [1].
+ * While operator[] simply overwrites the corresponding value, insert() does not [1].
 
 ```cpp
 // C++11 style 
