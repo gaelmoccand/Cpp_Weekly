@@ -34,7 +34,7 @@ int main() {
 
     print(v1);
 
-    // 2. using at is safer. Throw out of range exception
+    // 2. using at() is safer. Throw out of range exception
 
     try {
         v1.at(0) = 10;
@@ -67,8 +67,18 @@ int main() {
 
     // 5. some different ways to copy vectors
 
-    auto v2{v1};
-    copy(v1.begin(), v1.end(), back_inserter(v2));
+    //auto v2{v1};
+    std::vector<int> v2 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 , 12};
+    copy(v1.begin(), v1.end(), begin(v2)); // do not need back_inserter but v2 has to be big enough
+    print(v2);
+
+    std::vector<int> appendElements = {13, 14 ,15};
+    v2.insert(v2.end(), appendElements.begin(), appendElements.end());
+    print(v2);
+
+    std::vector<int> replaceElements = {0, 0 ,0 ,0};
+    v2.assign(replaceElements.begin(), replaceElements.end());
+    print(v2);
     
     auto pred = [](auto const &elem){ return elem % 2 == 0;};
     vector<int> v4;

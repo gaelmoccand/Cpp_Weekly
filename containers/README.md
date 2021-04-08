@@ -1,6 +1,6 @@
 # How to add and remove element in contigous and associative container
 
-## 0. Add elements in a vector
+## 0. Add element in a vector
 
 ### 0.1 using operator[] vs at() vs insert()
 
@@ -33,11 +33,45 @@ Vector is extended by inserting new elements before the element at the specified
 
 This is an expensive operation if not insert at the **end()** it cause container to relocate all the elements that were after position to their new positions.
 
-### 0.2 how to copy elements 
+### 0.2 how to add several elements into a vector
 
+The suboptimal way to inserting several elements by using **std::back_inserter** is to couple it with **std::copy**:
+```cpp
+    std::vector<int> v1;
+    std::vector<int> newElements = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 , 12};
+    copy(newElements.begin(), newElements.end(), std::back_inserter(v1));
+```
 
+Here std::copy successively passes each of the elements in newElements to the output iterator, that adds them to v by calling its push_back method. And this does the job: after the execution of **std::copy**, all the elements from newElements have been effectively copied into v1 [2].
 
+The problem here is before calling std::copy we know how many elements are going to be copied but this information is not used and push_back method is repeatedly called causing possibly multiple reallocations in the vector.
 
+If the number of elements to be copied is known, it would reallocate once insted of several time using push_back().
+So just use range insertion method.
+```cpp
+    std::vector<int> newElements = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 , 12};
+    std::vector<int> v1{begin(newElements), end(newElements)}; // at vector init.
+    
+    std::vector<int> v2;
+    v2.insert(end(v2), begin(newElements), end(newElements)); // appending new elements at the end of vector
+```
+
+If you need to replace elements and not appending them just user **assign()** instead
+
+```cpp    
+    std::vector<int> v2;
+    v2.assign(begin(newElements), end(newElements)); // replace elements
+```
+In some case you do not have the information in advance of how many elements are going to be copied . Typical case using **copy_if()**. 
+
+```cpp    
+    auto pred = [](auto const &elem){ return elem % 2 == 0;};
+    vector<int> v4;
+    copy_if(v1.begin(), v1.end(), back_inserter(v4), pred);
+    print(v4);
+```
+
+back_inserter is in this case required.
 
 ## 1. Add elements in a map
 ### 1.1 Overview for map  
@@ -93,7 +127,7 @@ Scott Meyers is in favor of **emplace()** and other experts like Bjarne and [Abs
 
 ### 1.4 try_emplace()
 
-**try_emplace()** is a safer successor of insert() or emplace(). In line with insert() and emplace(), try_emplace() doesn’t modify values for already inserted elements. 
+**try_emplace()** is a safer successor of insert() or emplace(). In line with insert() and emplace(), try_emplace() does not modify values for already inserted elements. 
 However, it prevents stealing from original arguments that happens both with insert() and emplace() in case of a failed insertion [1].
 ```cpp
 auto m = std::map<int, std::unique_ptr<A>> {};
@@ -106,7 +140,7 @@ m.emplace(1, std::move(p)); // but steals arguments
 assert(p != nullptr); // this will most likely fail
 ```
 
-try_emplace() makes sure that the argument remains untouched in case it wasn’t inserted:
+try_emplace() makes sure that the argument remains untouched in case it was not inserted:
 
 ```cpp
 m.try_emplace(1, std::move(p));
@@ -342,5 +376,5 @@ std::experimental::erase_if(mymap, predEvenKey);
 4. https://www.fluentcpp.com/2018/09/21/remove-elements-associative-container-cpp/
 5. https://en.cppreference.com/w/cpp/container/map/erase_if
 6. https://en.cppreference.com/w/cpp/container/vector/erase2
-
+7. https://www.fluentcpp.com/2017/03/28/inserting-several-elements-into-an-stl-container/
 
