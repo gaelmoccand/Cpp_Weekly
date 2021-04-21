@@ -77,8 +77,7 @@ back_inserter is in this case required.
 ### 1.1 Overview for map  
 Here is the overview of  different methods:
 It is divided in 2 columns: 1st one **overwite value** if element already present, the 2nd does not
-<img src="">
-![insert methods](https://www.fluentcpp.com/wp-content/uploads/2018/11/insertion_methods1.png)
+![insert methods](insertion_methods1.png)
 From www.fluentcpp.com
 
 
