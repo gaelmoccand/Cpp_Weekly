@@ -77,7 +77,10 @@ back_inserter is in this case required.
 ### 1.1 Overview for map  
 Here is the overview of  different methods:
 It is divided in 2 columns: 1st one **overwite value** if element already present, the 2nd does not
-<img src="https://www.fluentcpp.com/wp-content/uploads/2018/11/insertion_methods1.png">
+<img src="">
+![insert methods](https://www.fluentcpp.com/wp-content/uploads/2018/11/insertion_methods1.png)
+From www.fluentcpp.com
+
 
 ### 1.2  operator[] VS insert()
  * Operator[] differs from insert() in how it handles a situation when an element with the given key already exists in the map. 
