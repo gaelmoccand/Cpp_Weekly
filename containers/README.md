@@ -219,7 +219,7 @@ vector<int> myvec{1, 3, 42, 2, 42, 7, 1, 4};
 Check std::remove(myvec.begin(), myvec.end(), 42);
 ```
 
-![remove](https://www.fluentcpp.com/wp-content/uploads/2018/01/remove2.png)
+![remove](remove2.png)
 
 Note that the values of the elements left at the end of the range are unspecified.
 A bit like std::move doesn’t move , **_std::remove_ doesn’t remove**.
