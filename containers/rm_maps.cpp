@@ -6,9 +6,9 @@
 template <typename C>
 void disp(const C& cont) {
 
-    for (const auto& elem : cont){
-        std::cout << elem.first << " : ";
-        std::cout << elem.second << "\n";
+    for (const auto& [key, val] : cont){
+        std::cout << key << " : ";
+        std::cout << val << "\n";
     }
     std::cout << "\n";
 }
@@ -27,15 +27,16 @@ int main() {
     disp(mymap);
 
     // 2.remove element using iterator
-    auto iter = mymap.end();
-    mymap.erase(--iter);
-    cout << "remove last element in my map \n";
+    mymap.erase(mymap.begin());
+    cout << "remove 1st element in my map \n";
+    disp(mymap);
+    cout << "remove last element using range \n";
+    mymap.erase(++mymap.end(), mymap.end());
     disp(mymap);
 
-    
+    // 3. trick to remove evenKey using loop < C++20
     auto predEvenKey = [](auto const& elem){ auto const [key, val] = elem; return key % 2 == 0;};
 
-    // 3. trick to remove evenKey using loop < C++20
     cout << "for loop \n";
     for(auto it = mymap.begin(); it != mymap.end(); /*not increament here*/) {
         if(predEvenKey(*it)) {
