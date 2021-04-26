@@ -68,15 +68,15 @@ int main() {
     // 5. some different ways to copy vectors
 
     //auto v2{v1};
-    std::vector<int> v2 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 , 12};
+    vector<int> v2 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 , 12};
     copy(v1.begin(), v1.end(), begin(v2)); // do not need back_inserter but v2 has to be big enough
     print(v2);
 
-    std::vector<int> appendElements = {13, 14 ,15};
+    vector<int> appendElements = {13, 14 ,15};
     v2.insert(v2.end(), appendElements.begin(), appendElements.end());
     print(v2);
 
-    std::vector<int> replaceElements = {0, 0 ,0 ,0};
+    vector<int> replaceElements = {0, 0 ,0 ,0};
     v2.assign(replaceElements.begin(), replaceElements.end());
     print(v2);
     
@@ -89,7 +89,17 @@ int main() {
     std::experimental::erase_if(v5, std::not_fn(pred)); // copy then remove elements
     print(v5);
 
-    // 6.  some more algorithms
+    // 6. Move elemtents between instead of copy
+
+    vector<int> v6(std::make_move_iterator(v5.begin()), std::make_move_iterator(v5.end())); // move
+
+    print(v6);
+    cout << "element have been moved \n";
+    print(v5);
+
+
+
+    // 7.  some more algorithms
     auto iter = min_element(v1.begin(),v1.end()); // O(n) N comparisons
     cout << "min element is: " << *iter << "\n";
     reverse(v1.begin(), v1.end()); // O(last - first)/2 swaps.
@@ -97,7 +107,12 @@ int main() {
     sort(v1.begin(), v1.end()); // O(nlogn)
     print(v1);
 
-    // 7. vector of vector
+    auto isAny = any_of(v1.begin(), v1.end(), [](const auto & val){
+        return val == 100;
+    });
+    cout << boolalpha << "has 100 : " << isAny << "\n";
+
+    // 8. vector of vector
     vector<vector<int>> v3 = {{1, 2, 3}, {4 ,5 ,6}};
     cout << v3[1][1]; // row colum access 2d vec
 
