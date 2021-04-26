@@ -32,9 +32,10 @@ int main() {
     phone_book["Leon"] = 5; // overwrite
     phone_book.insert(std::pair{"Marc", 6}); // do not overwrite
 
-    // C++ 17 style insert with iterator
-    auto [iter , inserted] = phone_book.insert({"Marc", 7}); // do not overwrite value if key present
-    assert(inserted == false);
+    // C++ 17 style insert with iterator using
+    if(auto [iter , succeed] = phone_book.insert({"Marc", 7}); succeed == true) {
+        cout << "insert succeed \n";
+    }
     disp(phone_book);
 
     // 2. Using emplace

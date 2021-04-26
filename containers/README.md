@@ -101,10 +101,16 @@ assert(m.at(1) == "Anna");
 
 ```cpp
 // C++17 structured bindings style
-auto[it, ins] = m.insert({2, "Anna"});
+auto[iterel, succeed] = m.insert({2, "Anna"});
 ```
- * operator[] requires a DefaultConstructible "value_type", which means that if the default constructor is explicitly or implicitly disabled,
-  the code won’t compile.
+ * operator[] requires a DefaultConstructible "value_type", which means that if the default constructor is explicitly or implicitly disabled, the code will not compile.
+
+```cpp
+// C++17 structured bindings style
+    if(auto [iter , succeed] = m.insert({2, "Anna"}); succeed == true) {
+        cout << "insert succeed \n";
+    }
+```
 
 ### 1.3  emplace() 
 C++11 introduced **emplace()** which has the same functionality as **insert()** but it enables in-place construction.
