@@ -112,6 +112,10 @@ int main() {
     });
     cout << boolalpha << "has 100 : " << isAny << "\n";
 
+    if( auto iterel = find(v1.begin(), v1.end(), 10); iterel != v1.end()) {
+        cout << "found 10 \n";
+    } 
+
     // 8. vector of vector
     vector<vector<int>> v3 = {{1, 2, 3}, {4 ,5 ,6}};
     cout << v3[1][1]; // row colum access 2d vec
