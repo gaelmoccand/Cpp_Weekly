@@ -60,7 +60,7 @@ Can't be a range-for loop in some case
 
 ```cpp
     std::set<std::string> competitions  {"Roland Garros", "Wimbledon", "US open"};
-    const auto index = getIndex(competitions,1);
+    const auto index = getIndex(competitions, 1);
     for (auto competition = begin(competitions); competition != cend(competitions); ++competition) {
         std::cout << index(competition) << " : " << *competition << std::endl;
     }
@@ -74,9 +74,9 @@ Can't be a range-for loop in some case
 
 ```cpp
     template<typename C, typename V>
-    void findAndEmplace(C& container,const V& targetVal, const V& insertVal) {
+    void findAndEmplace(C& container, const V& targetVal, const V& insertVal) {
         auto iter = std::find(std::cbegin(container), std::cend(container), targetVal); 
-        container.emplace(iter,insertVal);
+        container.emplace(iter, insertVal);
     }
     findAndEmplace(players, std::string{"Federer"}, std::string{"Wawrinka"});
 ```
