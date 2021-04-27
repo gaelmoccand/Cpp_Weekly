@@ -34,7 +34,7 @@ Can't be a range-for loop in some case
 * It does not show what is happening in the loop but call a function instead.
 * You could also use a lambda instead of the function but it will then "break" the level of abstraction [2]
 ```cpp
-    for_each(std::cbegin(players),std::cend(players),displayNationality);
+    for_each(std::cbegin(players), std::cend(players), displayNationality);
 ```
 
 ### 5. range-for loop acessing the index
@@ -75,7 +75,7 @@ Can't be a range-for loop in some case
 ```cpp
     template<typename C, typename V>
     void findAndEmplace(C& container,const V& targetVal, const V& insertVal) {
-        auto iter = std::find(std::cbegin(container),std::cend(container),targetVal); 
+        auto iter = std::find(std::cbegin(container), std::cend(container), targetVal); 
         container.emplace(iter,insertVal);
     }
     findAndEmplace(players, std::string{"Federer"}, std::string{"Wawrinka"});
