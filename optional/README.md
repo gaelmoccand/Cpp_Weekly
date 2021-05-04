@@ -9,7 +9,7 @@ Optional comes from functional programming like Rust (std::option).
 For a given type T, **optional<T>** represent an object that can be:
 
 * either a value of type T,
-* or an ìemptyî value or not_set
+* or an ‚Äúempty‚Äù value or not_set
 
 Typical use cases are the following :
 
@@ -95,7 +95,7 @@ Always try to not named optional. The reason is that in C++17 copy elision is ma
 Also note that according to the Standard if you wrap a return value into braces {} then you prevent move operations from happening. The returned object will be copied only[1].
 
 ## References
-1. "C++17 in Detail: Learn the Exciting Features of the New C++ Standard!" By: Bart?omiej Filipek
-2. https://www.fluentcpp.com/2016/11/24/clearer-interfaces-with-optionalt/
+1. "C++17 in Detail: Learn the Exciting Features of the New C++ Standard!" By: Bart?omiej Filipek https://leanpub.com/cpp17indetail
+3. https://www.fluentcpp.com/2016/11/24/clearer-interfaces-with-optionalt/
 
 
