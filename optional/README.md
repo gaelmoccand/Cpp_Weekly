@@ -9,7 +9,7 @@ Optional comes from functional programming like Rust (std::option).
 For a given type T, **optional<T>** represent an object that can be:
 
 * either a value of type T,
-* or an ìemptyî value or not_set
+* or an ‚Äúempty‚Äù value or not_set
 
 Typical use cases are the following :
 
@@ -104,6 +104,7 @@ They are different ways to access the stored value:
 * **value()** - returns the value, or throws std::bad_optional_access
 * **value_or(defaultVal)** - returns the value if available, or defaultVal otherwise
 
+Warning, if we try to access an optional that does not hold a value, the results is **undefined** and exception is not thrown.
 
 ### 5. Using optional in function parameters
 
@@ -120,13 +121,16 @@ std::string buildQuery(const boost::optional<std::string>& gender,
     if (gender)
         oss << "WHERE gender = '" << *gender << "' ";
     if (nationality)
-        oss << "AND nationality = '" << *nationality << "' ";
+        oss << "AND nationality = '" << *nationality << "' ";git
     if (eyeColor)
         oss << "AND eyeColor = '" << *eyeColor << "'";
     return oss.str();
 }
 
+...
+// caller with optional
 buildQuery({"male"}, std::nullopt, {"brown"});
+buildQuery({"female"}, {}, {"blue"});
 
 ```
 
@@ -135,5 +139,6 @@ buildQuery({"male"}, std::nullopt, {"brown"});
 1. "C++17 in Detail: Learn the Exciting Features of the New C++ Standard!" By: Bart?omiej Filipek
 2. https://www.fluentcpp.com/2016/11/24/clearer-interfaces-with-optionalt/
 3. https://www.fluentcpp.com/2016/12/01/partial-queries-with-optionalt/
+
 
 
