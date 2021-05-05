@@ -38,7 +38,7 @@ It possible also to set to a value specifying the type or using deduction guide.
 ```
 
 It is also possible to use **in_place** tag to specify that the default constructor must be used and to avoid the creation of temporary object and use of move ctor.
-As it can be seen in the code below, using in_place tag avoid the unnecessary call to a move ctor with a temporary. The object stored in the optional is created in place, in the same way as you would call **MyType{}**. No additional copy or move is needed.
+As it can be seen in the code below, using in_place tag avoid the unnecessary call to a move ctor with a temporary. The object stored in the optional is created in place, in the same way as you would call **MyType{}**. No additional copy or move is needed [1].
 
 ```cpp
 class MyType
@@ -94,8 +94,46 @@ Always try to not named optional. The reason is that in C++17 copy elision is ma
 
 Also note that according to the Standard if you wrap a return value into braces {} then you prevent move operations from happening. The returned object will be copied only[1].
 
+### 4. Access the stored value
+
+Before accessing the stored value, we must check if the value is present. This can be done using **has_value()** or simply using **if (optional<T>)**.
+
+They are different ways to access the stored value:
+
+* **operator*** and **operator->** - if there's no value the behaviour is undefined!
+* **value()** - returns the value, or throws std::bad_optional_access
+* **value_or(defaultVal)** - returns the value if available, or defaultVal otherwise
+
+
+### 5. Using optional in function parameters
+
+It is possible to use optional<T> as an argument to leverage on its not_set semantic.
+Let's have a look at the following example to create partial db queries [3].
+
+```cpp
+std::string buildQuery(const boost::optional<std::string>& gender,
+                       const boost::optional<std::string>& nationality,
+                       const boost::optional<std::string>& eyeColor) {
+    std::ostringstream oss;
+    oss << "SELECT * FROM persons ";
+
+    if (gender)
+        oss << "WHERE gender = '" << *gender << "' ";
+    if (nationality)
+        oss << "AND nationality = '" << *nationality << "' ";
+    if (eyeColor)
+        oss << "AND eyeColor = '" << *eyeColor << "'";
+    return oss.str();
+}
+
+buildQuery({"male"}, std::nullopt, {"brown"});
+
+```
+
+
 ## References
 1. "C++17 in Detail: Learn the Exciting Features of the New C++ Standard!" By: Bart?omiej Filipek
 2. https://www.fluentcpp.com/2016/11/24/clearer-interfaces-with-optionalt/
+3. https://www.fluentcpp.com/2016/12/01/partial-queries-with-optionalt/
 
 
