@@ -50,12 +50,68 @@ string_view getName() {
     return name;
 }
 ```
-It leads to undefined behaviour because, the string name goes out of scope when the function returned but the string_view is still pointing to this string.
+It leads to undefined behaviour because, the string name lifetime is not extended when the function returned but the string_view is still pointing to it.
+
+In the previous example what about calling the function this way.
+
+```cpp
+string_view startFromWord(std::string_view str, std::string_view word) {
+     return str.substr(str.find(word)); // substr creates now  only a new view
+}
+
+auto str = "My Super"s;
+auto str_v = startFromWord(str + " String", "Super");
+// use 'str_v' later in the code...
+```
+
+“Super” is a temporary const char* literal and it's passed as string_view word into the function. That's fine, as the temporary is guaranteed to live as long as the whole function invocation.
+However, the result of string concatenation str + “ String” is a temporary and the function returns a string_view str_v of this temporary outside the call! Then Boom !
+To sum up, when a string_view is returned from a function, then we should be  about the state of the string the string_view points to. 
+### Reference lifetime extension
+
+Any issue in the code below:
+
+```cpp
+vector<int> GenerateVec() {
+    return vector<int>(5, 1);
+}
+
+const vector<int>& refv = GenerateVec();
+```
+
+This code over is OK. the C++ rules say that the lifetime of a temporary object bound to a const reference is prolonged to the lifetime of the reference itself.
+
+However it does not work in this case :
+
+```cpp
+string func() {
+    string s;
+    // build s...
+    return s;
+}
+
+string_view sv = func(); // no temp lifetime extension!
+```
+**string_view** is also a constant view, so should behave almost like a const reference. But according to existing C++ rules, it's not. The compiler immediately destroys the temporary object after the whole expression is done. The lifetime cannot be extended in this case [2].
+
+A way to solve this issue would be to rewrite the call like this:
+
+```cpp
+auto temp = func();
+std::string_view str_v {temp}; // fine lifetime of temporary is extended through 'temp'
+```
+You have to be sure the lifetime of the object is correct when string_view is returned from function !
+
+### Handling Non-Null Terminated Strings
+
+TBD
+
 
 ## string_view creation and its operations
 
 
-##References
+## References
+
 1. https://www.fluentcpp.com/2021/02/19/a-recap-on-string_view/
 2. C++17 in Detail: Learn the Exciting Features of the New C++ Standard! by By: Bart?omiej Filipek
 
