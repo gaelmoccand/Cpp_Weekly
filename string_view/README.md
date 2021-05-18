@@ -102,10 +102,6 @@ std::string_view str_v {temp}; // fine lifetime of temporary is extended through
 ```
 You have to be sure the lifetime of the object is correct when string_view is returned from function !
 
-### Handling Non-Null Terminated Strings
-
-TBD
-
 ## string_view creation and its operations
 
 operator[], at, front, back, data - are also const - so you cannot change the underlying character sequence (it's only “read access”).
@@ -115,24 +111,67 @@ You have also iterators like cbegin()/ crbegin() etc.
 const char* cstr = "Hello World";
 // the whole string:
 string_view sv1 {cstr};
-cout << sv1 << ", len: " << sv1.size() << '\n'; // Hello World, len: 11
+cout << sv1 << ", len: " << sv1.size() << '\n'; // prints Hello World, len: 11
 
 // slice
 string_view sv2 {cstr, 5}; // not null-terminated!
-cout << sv2 << ", len: " << sv2.size() << '\n'; // Hello, len: 5
+cout << sv2 << ", len: " << sv2.size() << '\n'; // prints Hello, len: 5
 
 // from string:
 string str = "Hello String";
 string_view sv3 = str;
-cout << sv3 << ", len: " << sv3.size() << '\n'; // Hello String, len: 12
+cout << sv3 << ", len: " << sv3.size() << '\n'; // prints Hello String, len: 12
 
 // ""sv literal
 using namespace std::literals;
 string_view sv4 = "Hello\0 Super World"sv;
-cout << sv4 << ", len: " << sv4.size() << '\n'; // Hello Super World, len: 18
-cout << sv4.data() << " - till zero\n"; // Hello - till zero
+cout << sv4 << ", len: " << sv4.size() << '\n'; // prints Hello Super World, len: 18
+cout << sv4.data() << " - till zero\n"; // rpints Hello - till zero
+```
+### Handling Non-Null Terminated Strings
+
+
+Check the code below to see the difference between cout and printf()
+
+```cpp
+string s = "Hello World";
+cout << s.size() << '\n';
+string_view sv = s;
+auto sv2 = sv.substr(0, 5);
+cout << sv2; // prints "Hello"
+cout << sv2.data() << '\n'; /// prints "Hello World" because data() returns char array of underlying string
+
+printf("%.*s\n", static_cast<int>(sv2.size()), sv2.data()); // you must add the size
 ```
 
+To convert string into numbers use C++17 function **from_chars** because it is more efficient [3].
+Don't use atof because it takes only the pointer to a null-terminated string, so string_view is not compatible. Moreover it is less efficient than from_chars.
+
+```cpp
+// use from_chars (C++17)
+string number = "123.456";
+string_view svNum {number.data(), 3};
+int res = 0;
+std::from_chars(svNum.data(), svNum.data()+svNum.size(), res);
+cout << res << '\n';
+```
+
+In some particular cases, API or legacy code supports only null terminated strings. look:
+
+```cpp
+void convertAndShow(const char *str) {
+       auto f = atof(str);
+       std::cout << f << '\n';
+}
+
+string number = "123.456";
+string_view svNum {number.data(), 3};
+// ... 
+string tempStr {svNum.data(), svNum.size()}; // To create string from string_view pass data() AND size()
+convertAndShow(tempStr.c_str());
+```
+
+convertAndShow only works with null terminated strings, so the only way we have is to create a temporary string tempStr and then pass it to the function.
 
 ## member init using string , string_view
 
@@ -141,6 +180,7 @@ TBC
 
 1. https://www.fluentcpp.com/2021/02/19/a-recap-on-string_view/
 2. C++17 in Detail: Learn the Exciting Features of the New C++ Standard! by By: Bart?omiej Filipek
+3. https://www.fluentcpp.com/2018/07/27/how-to-efficiently-convert-a-string-to-an-int-in-c/
 
 
 
