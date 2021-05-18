@@ -106,10 +106,37 @@ You have to be sure the lifetime of the object is correct when string_view is re
 
 TBD
 
-
 ## string_view creation and its operations
 
+operator[], at, front, back, data - are also const - so you cannot change the underlying character sequence (it's only “read access”).
+You have also iterators like cbegin()/ crbegin() etc.
 
+```cpp
+const char* cstr = "Hello World";
+// the whole string:
+string_view sv1 {cstr};
+cout << sv1 << ", len: " << sv1.size() << '\n'; // Hello World, len: 11
+
+// slice
+string_view sv2 {cstr, 5}; // not null-terminated!
+cout << sv2 << ", len: " << sv2.size() << '\n'; // Hello, len: 5
+
+// from string:
+string str = "Hello String";
+string_view sv3 = str;
+cout << sv3 << ", len: " << sv3.size() << '\n'; // Hello String, len: 12
+
+// ""sv literal
+using namespace std::literals;
+string_view sv4 = "Hello\0 Super World"sv;
+cout << sv4 << ", len: " << sv4.size() << '\n'; // Hello Super World, len: 18
+cout << sv4.data() << " - till zero\n"; // Hello - till zero
+```
+
+
+## member init using string , string_view
+
+TBC
 ## References
 
 1. https://www.fluentcpp.com/2021/02/19/a-recap-on-string_view/
