@@ -130,7 +130,6 @@ cout << sv4.data() << " - till zero\n"; // rpints Hello - till zero
 ```
 ### Handling Non-Null Terminated Strings
 
-
 Check the code below to see the difference between cout and printf()
 
 ```cpp
@@ -148,11 +147,10 @@ To convert string into numbers use C++17 function **from_chars** because it is m
 Don't use atof because it takes only the pointer to a null-terminated string, so string_view is not compatible. Moreover it is less efficient than from_chars.
 
 ```cpp
-// use from_chars (C++17)
 string number = "123.456";
 string_view svNum {number.data(), 3};
 int res = 0;
-std::from_chars(svNum.data(), svNum.data()+svNum.size(), res);
+std::from_chars(svNum.data(), svNum.data() + svNum.size(), res);
 cout << res << '\n';
 ```
 
@@ -173,9 +171,94 @@ convertAndShow(tempStr.c_str());
 
 convertAndShow only works with null terminated strings, so the only way we have is to create a temporary string tempStr and then pass it to the function.
 
-## member init using string , string_view
+## class member init using string_view
 
-TBC
+Does string_view is the best candidate for member initialisation ?
+
+Look at the code below: 
+
+```cpp
+class UserName {
+      std::string m_name;
+
+public:
+      UserName(const std::string& str) : m_name(str) {}
+};
+```
+
+Is it worth to replace this code by the folllowing using string_view ?
+
+```cpp
+UserName(std::string_view sv) : m_name(sv) {}
+
+```
+
+The answer is not that straitforward because we need to take into consideration SSO for short string optimization.
+The approach with passing by value is consistent with item 41 - “Consider pass by value for copyable parameters that are cheap to move and always copied” from Effective Modern C++ by Scott Meyers see section rvalue.
+
+However, is std::string cheap to move?
+
+Although the C++ Standard doesn't specify that, usually, strings are implemented with Small String Optimisation (SSO) - the string object contains extra space to fit characters without additional memory allocation. That means that moving a string is the same as copying it. And since the string is short, the copy is also fast.
+
+
+```cpp
+class UserName {
+       std::string m_name;
+
+public :
+        UserName(std::string str) : m_name(std::move(str)) { }
+};
+
+// creation from a string literal
+UserName u1{"John With Very Long Name"};
+
+// creation from l-value:
+std::string s2 {"Marc With Very Long Name"};
+UserName u2 {s2};
+// use s2 later...
+
+// from r-value reference
+std::string s3 {"Marc With Very Long Name"};
+UserName u3 {std::move(s3)};
+
+```
+For std::string:
+
+ul - one allocation - for the input argument and then one move into the mName. It's better than with const std::string& where we got two memory allocations in that case. And similar to the string_view approach.
+
+u2 - one allocation - we have to copy the value into the argument, and then we can move from it.
+
+u3 - no allocations, only two move operations - that's better than with string_view and const string&!
+
+When you pass std::string by value not only is the code simpler, there's also no need to write separate overloads for r-value references.
+
+
+Let's reconsider our example of passing by value when the string is  (SSO):
+
+```cpp
+UserName u1{"John"}; // fits in SSO buffer
+
+std::string s2 {"Marc"}; // fits in SSO buffer
+UserName u2 {s2};
+
+std::string s3 {"Marc"}; // fits in SSO buffer
+UserName u3 {std::move(s3)};
+
+```
+
+
+In  passed by value case with short string then :
+
+u1 - two copies: the input argument is created from a string literal, and then there's copy into mName.
+
+u2 - two copies: one copy into the argument and then there's the second copy into the member.
+
+u3 - two copies: one copy into the argument (move means copy) and then there's the second copy into the member.
+
+
+As you see for short strings passing by value might be “slower” when you pass some existing string, simply because you have two copies rather than one. On the other hand, the compiler might optimise the code better when it sees a value. What's more, short strings are cheap to copy so the potential “slowdown” might not be even visible.
+
+All in all, **passing by value and then moving from a string argument is the preferred solution**. You have simple code and better performance for larger strings [2].
 ## References
 
 1. https://www.fluentcpp.com/2021/02/19/a-recap-on-string_view/
