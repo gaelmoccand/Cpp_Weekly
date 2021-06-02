@@ -308,23 +308,23 @@ Associative containers can be maps & sets and their different types likee unorde
 ### 3.1 Remove elements at a position
 
 ```cpp
-myvec.erase(position);
+mymap.erase(position);
 ```
 removes the entry at that position.
 
 And:
 
 ```cpp
-myvec.erase(first, last);
+mymap.erase(first, last);
 ```
 removes all the entries between first (included) and last (not included).
 
 ### 3.2 Remove element equivalent to a specific key 
 
-Piece of cake !
+Piece of cake using the key !
 
 ```cpp
-myvec.erase(myKey);
+mymap.erase(myKey);
 ```
 
 To remove an elemement of a certain value then we have to use predicates. 
