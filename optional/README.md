@@ -114,7 +114,7 @@ if (posElem) {
 
 As it can be seen from the example over, using **optional<T>** to return from function respect the  level of abstraction. 
 
-Always try to not named optional. The reason is that in C++17 copy elision is mandatory. If an local optional is declared inside the findElem()function then a temporary will be unnecessary created.  
+Always try to not named optional. The reason is that in C++17 copy elision is mandatory. If an local optional is declared inside the function then a temporary will be unnecessary created.  
 
 Also note that according to the Standard if you wrap a return value into braces {} then you prevent move operations from happening. The returned object will be copied only[1].
 
