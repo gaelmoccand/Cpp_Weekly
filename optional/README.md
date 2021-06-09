@@ -69,6 +69,7 @@ It is also possible to use **in_place** tag to specify that the default construc
 As it can be seen in the code below, using in_place tag avoid the unnecessary call to a move ctor with a temporary. The object stored in the optional is created in place, in the same way as you would call **MyType{}**. No additional copy or move is needed [1].
 The tag **in_place** is also useful when the ctor have more than one argument. By default optional can work with a single argument ( Rvalue reference), and efficiently pass it to the wrapped type[1].
 
+use **in_place** and the version of the constructor that handles variable argument list:
 ```cpp
 std::optional<std::vector<int>> optVector(std::in_place, {1, 2, 3});
 ```
