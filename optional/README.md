@@ -74,6 +74,13 @@ std::optional<std::vector<int>> optVector(std::in_place, {1, 2, 3});
 ```
 
 The last option is to use the factory method **make_optional**.
+```cpp
+
+auto opt = std::make_optional<Point>(0, 0);
+
+auto opt = std::make_optional<UserName>();
+```
+    
 The make_optional tag implements in place construction equivalent to:
 ```cpp
 return std::optional<T>(std::in_place, std::forward<Args>(args)...);
