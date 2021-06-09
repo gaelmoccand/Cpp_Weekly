@@ -40,10 +40,10 @@ It possible also to set to a value specifying the type or using deduction guide.
 
 
 ```cpp
-class MyType
+class UserName
 {
 public:
-   MyType() : m_name("Default") {}
+   UserName() : m_name("Default") {}
    // ...
 };
     
@@ -58,15 +58,15 @@ std::optional<UserName> u2{UserName()};
 That works but it creates an additional temporary object.
 The code creates a temporary object and then moves it into the object stored in optional.
 
-Here we can use a more efficient constructor - specifically by leveraging std::in_place_t:
+Here we can use a more efficient constructor. It is also possible to use **in_place** tag to specify that the default constructor must be used and to avoid the creation of temporary object and use of move ctor.
+As it can be seen in the code below, using in_place tag avoid the unnecessary call to a move ctor with a temporary.
 
 ```cpp
 std::optional<MyType> opt{std::in_place};
 ```
 Then no additional temp object is created.
+The object stored in the optional is created in place, in the same way as you would call **UserName{}**. No additional copy or move is needed [1].
     
-It is also possible to use **in_place** tag to specify that the default constructor must be used and to avoid the creation of temporary object and use of move ctor.
-As it can be seen in the code below, using in_place tag avoid the unnecessary call to a move ctor with a temporary. The object stored in the optional is created in place, in the same way as you would call **MyType{}**. No additional copy or move is needed [1].
 The tag **in_place** is also useful when the ctor have more than one argument. By default optional can work with a single argument ( Rvalue reference), and efficiently pass it to the wrapped type[1].
 
 use **in_place** and the version of the constructor that handles variable argument list:
@@ -93,13 +93,23 @@ However you will still need to use **in_place** tag for optional if you are usin
 ### 3. return optional in a function
 
 Returning with optional<T> from a function is a cleaner approach than returning using "-1" or "nullptr".
+    
+If you return an optional from a function, then it's very convenient to return just std::nullopt or the computed value.
+
+```cpp
+std::optional<std::string> tryParse(Input input) {
+    if (input.valid())
+        return input.asString();
+    return std::nullopt;
+}
+```
 
 Have a look at the example below:
 
 ```cpp
 std::vector myVec {1, 2, 3, 4};
 std::optional<std::vector<int>::const_iterator> findElem(const std::vector<int> vec, int target) {
-    std::optional<std::vector<int>::const_iterator> posElem = std::find(vec.begin(), vec.end(), target);
+    auto posElem = std::find(vec.begin(), vec.end(), target);
     if (posElem != vec.end()) {
         return posElem;
     }
@@ -114,7 +124,7 @@ if (posElem) {
 
 As it can be seen from the example over, using **optional<T>** to return from function respect the  level of abstraction. 
 
-Always try to not named optional. The reason is that in C++17 copy elision is mandatory. If an local optional is declared inside the findElem()function then a temporary will be unnecessary created.  
+Always try to not named optional. The reason is that in C++17 copy elision is mandatory. If an local optional is declared inside the function then a temporary will be unnecessary created.  
 
 Also note that according to the Standard if you wrap a return value into braces {} then you prevent move operations from happening. The returned object will be copied only[1].
 
@@ -136,9 +146,9 @@ It is possible to use optional<T> as an argument to leverage on its not_set sema
 Let's have a look at the following example to create partial db queries [3].
 
 ```cpp
-std::string buildQuery(const boost::optional<std::string>& gender,
-                       const boost::optional<std::string>& nationality,
-                       const boost::optional<std::string>& eyeColor) {
+std::string buildQuery(const std:::optional<std::string>& gender,
+                       const std::optional<std::string>& nationality,
+                       const std::optional<std::string>& eyeColor) {
     std::ostringstream oss;
     oss << "SELECT * FROM persons ";
 
