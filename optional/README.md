@@ -58,7 +58,7 @@ std::optional<UserName> u2{UserName()};
 That works but it creates an additional temporary object.
 The code creates a temporary object and then moves it into the object stored in optional.
 
-Here we can use a more efficient constructor - specifically by leveraging std::in_place_t:
+Here we can use a more efficient constructor - specifically by using **std::in_place** tag:
 
 ```cpp
 std::optional<MyType> opt{std::in_place};
