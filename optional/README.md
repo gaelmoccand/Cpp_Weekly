@@ -93,13 +93,23 @@ However you will still need to use **in_place** tag for optional if you are usin
 ### 3. return optional in a function
 
 Returning with optional<T> from a function is a cleaner approach than returning using "-1" or "nullptr".
+    
+If you return an optional from a function, then it's very convenient to return just std::nullopt or the computed value.
+
+```cpp
+std::optional<std::string> tryParse(Input input) {
+    if (input.valid())
+        return input.asString();
+    return std::nullopt;
+}
+```
 
 Have a look at the example below:
 
 ```cpp
 std::vector myVec {1, 2, 3, 4};
 std::optional<std::vector<int>::const_iterator> findElem(const std::vector<int> vec, int target) {
-    std::optional<std::vector<int>::const_iterator> posElem = std::find(vec.begin(), vec.end(), target);
+    auto posElem = std::find(vec.begin(), vec.end(), target);
     if (posElem != vec.end()) {
         return posElem;
     }
