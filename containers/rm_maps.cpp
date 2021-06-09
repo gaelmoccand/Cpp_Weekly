@@ -30,14 +30,15 @@ int main() {
     mymap.erase(mymap.begin());
     cout << "remove 1st element in my map \n";
     disp(mymap);
-    cout << "remove last element using range \n";
-    mymap.erase(++mymap.end(), mymap.end());
+    cout << "remove last elements using range \n";
+    auto start = ++mymap.begin();
+    mymap.erase(++start, mymap.end());
     disp(mymap);
 
     // 3. trick to remove evenKey using loop < C++20
     auto predEvenKey = [](auto const& elem){ auto const [key, val] = elem; return key % 2 == 0;};
 
-    cout << "for loop \n";
+    cout << "remove using predicate < C++20\n";
     for(auto it = mymap.begin(); it != mymap.end(); /*not increament here*/) {
         if(predEvenKey(*it)) {
             it = mymap.erase(it); // erase returns the iter. following the removed elements
@@ -50,7 +51,7 @@ int main() {
     disp(mymap);
 
     // 4. remove evenKey using erase_if C++20
-    cout << "erase_if(mymap,evenKey) \n";
+    cout << "erase_if(mymap,evenKey) in C++20 \n";
     std::experimental::erase_if(mymap, predEvenKey);
     disp(mymap);
     
