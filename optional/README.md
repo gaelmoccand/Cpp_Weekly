@@ -136,9 +136,9 @@ It is possible to use optional<T> as an argument to leverage on its not_set sema
 Let's have a look at the following example to create partial db queries [3].
 
 ```cpp
-std::string buildQuery(const boost::optional<std::string>& gender,
-                       const boost::optional<std::string>& nationality,
-                       const boost::optional<std::string>& eyeColor) {
+std::string buildQuery(const std:::optional<std::string>& gender,
+                       const std::optional<std::string>& nationality,
+                       const std::optional<std::string>& eyeColor) {
     std::ostringstream oss;
     oss << "SELECT * FROM persons ";
 
