@@ -40,10 +40,10 @@ It possible also to set to a value specifying the type or using deduction guide.
 
 
 ```cpp
-class MyType
+class UserName
 {
 public:
-   MyType() : m_name("Default") {}
+   UserName() : m_name("Default") {}
    // ...
 };
     
