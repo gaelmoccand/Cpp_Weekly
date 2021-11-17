@@ -109,8 +109,7 @@ Have a look at the example below:
 ```cpp
 std::vector myVec {1, 2, 3, 4};
 std::optional<std::vector<int>::const_iterator> findElem(const std::vector<int> vec, int target) {
-    auto posElem = std::find(vec.begin(), vec.end(), target);
-    if (posElem != vec.end()) {
+    if (auto posElem = std::find(vec.begin(), vec.end(), target); posElem != vec.end()) {
         return posElem;
     }
     return std::nullopt; 
@@ -168,9 +167,6 @@ buildQuery({"female"}, {}, {"blue"});
 
 ```
 
-### refactoring 
-
-TBC
 
 ## References
 1. "C++17 in Detail: Learn the Exciting Features of the New C++ Standard!" By: Bart?omiej Filipek
