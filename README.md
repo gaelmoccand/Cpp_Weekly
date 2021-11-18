@@ -1,5 +1,5 @@
 # Cpp Weekly
-Objective is to present, share and dicuss Modern Cpp features, best practice and more
+Objective is to present, share and dicuss Modern C++ features, best practices and more
 
 ## How to iterate on containers
 [Iterate ](https://github.com/gaelmoccand/Cpp-Daily/blob/develop/iterate/README.md)
