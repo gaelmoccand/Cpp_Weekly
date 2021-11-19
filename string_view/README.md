@@ -4,7 +4,8 @@ In C++ **std::string**, solves the issue of C char* by providing a powerfull and
 Ownership and memory management of the array of characters is a big advantage, but it comes with with a price: each time we use a **std::string** its memory is allocated on the heap.
 This can have a performance impact if your code need to build and destruct std::string many times.
 
-To overcome this problem, string_view can be used. A **string_view** is a lightweight object that reference a C or C++ string. As its name suggests it does noot use the original string but it use a non owning view instead.
+To overcome this problem, string_view can be used. A **string_view** is a lightweight object that reference a C or C++ string. 
+As its name suggests it does noot use the original string but it use a non owning view instead. It is like a pointer or a referaence in that it does not own the characters it points to.
 
 ## std::string in action
 
@@ -64,9 +65,9 @@ auto str_v = startFromWord(str + " String", "Super");
 // use 'str_v' later in the code...
 ```
 
-“Super” is a temporary const char* literal and it's passed as string_view word into the function. That's fine, as the temporary is guaranteed to live as long as the whole function invocation.
-However, the result of string concatenation str + “ String” is a temporary and the function returns a string_view str_v of this temporary outside the call! Then Boom !
-To sum up, when a string_view is returned from a function, then we should be  about the state of the string the string_view points to. 
+“Super” is a temporary const char* literal and it's passed as _string_view_ word into the function. That's fine, as the temporary is guaranteed to live as long as the whole function invocation.
+However, the result of string concatenation str + “ String” is a temporary and the function returns a _string_view_ _str_v_ of this temporary outside the call! Then Boom !
+To sum up, when a _string_view_ is returned from a function, then we should be  about the state of the string the _string_view_ points to. 
 ### Reference lifetime extension
 
 Any issue in the code below:
