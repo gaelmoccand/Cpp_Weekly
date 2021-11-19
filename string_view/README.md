@@ -4,8 +4,8 @@ In C++ **std::string**, solves the issue of C char* by providing a powerfull and
 Ownership and memory management of the array of characters is a big advantage, but it comes with with a price: each time we use a **std::string** its memory is allocated on the heap.
 This can have a performance impact if your code need to build and destruct std::string many times.
 
-To overcome this problem, string_view can be used. A **string_view** is a lightweight object that reference a C or C++ string. 
-As its name suggests it does noot use the original string but it use a non owning view instead. It is like a pointer or a referaence in that it does not own the characters it points to.
+To overcome this problem, string_view can be used. A _string_view_ is a lightweight object that reference a C or C++ string. 
+As its name suggests it does noot use the original string but it use a non owning view instead. It is like a pointer or a referaence in that it **does not own** the characters it points to.
 
 ## std::string in action
 
@@ -14,7 +14,8 @@ Consider the example below [2]:
 ```cpp
 string startFromWordStr(const string& strArg, const string& word) {
     return strArg.substr(strArg.find(word)); //3.  substr creates retrun new string
-} //4. we might have a string copy or two for the return function (copy elision should take place here)
+}                                           
+//4. we might have a string copy or two for the return function (copy elision should take place here)
 
 string str {"Hello Guys the online meeting starts now"}; //1. create a 1st string str
 
