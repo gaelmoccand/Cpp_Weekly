@@ -196,7 +196,7 @@ UserName(std::string_view sv) : m_name(sv) {}
 ```
 
 The answer is not that straitforward because we need to take into consideration SSO for short string optimization.
-The approach with passing by value is consistent with item 41 - “Consider pass by value for copyable parameters that are cheap to move and always copied” from Effective Modern C++ by Scott Meyers see section rvalue.
+The approach with passing by value is consistent with Scoot Meyers book [4]
 
 However, is std::string cheap to move?
 
@@ -226,11 +226,9 @@ UserName u3 {std::move(s3)};
 ```
 For std::string:
 
-ul - one allocation - for the input argument and then one move into the mName. It's better than with const std::string& where we got two memory allocations in that case. And similar to the string_view approach.
-
-u2 - one allocation - we have to copy the value into the argument, and then we can move from it.
-
-u3 - no allocations, only two move operations - that's better than with string_view and const string&!
+* u1 - one allocation - for the input argument and then one move into the mName. It's better than with const std::string& where we got two memory allocations in that case. And similar to the string_view approach.
+* u2 - one allocation - we have to copy the value into the argument, and then we can move from it.
+* u3 - no allocations, only two move operations - that's better than with string_view and const string&!
 
 When you pass std::string by value not only is the code simpler, there's also no need to write separate overloads for r-value references.
 
@@ -251,12 +249,9 @@ UserName u3 {std::move(s3)};
 
 In  passed by value case with short string then :
 
-u1 - two copies: the input argument is created from a string literal, and then there's copy into mName.
-
-u2 - two copies: one copy into the argument and then there's the second copy into the member.
-
-u3 - two copies: one copy into the argument (move means copy) and then there's the second copy into the member.
-
+* u1 - two copies: the input argument is created from a string literal, and then there's copy into mName.
+* u2 - two copies: one copy into the argument and then there's the second copy into the member.
+* u3 - two copies: one copy into the argument (move means copy) and then there's the second copy into the member.
 
 As you see for short strings passing by value might be “slower” when you pass some existing string, simply because you have two copies rather than one. On the other hand, the compiler might optimise the code better when it sees a value. What's more, short strings are cheap to copy so the potential “slowdown” might not be even visible.
 
@@ -266,6 +261,7 @@ All in all, **passing by value and then moving from a string argument is the pre
 1. https://www.fluentcpp.com/2021/02/19/a-recap-on-string_view/
 2. C++17 in Detail: Learn the Exciting Features of the New C++ Standard! by By: Bart?omiej Filipek
 3. https://www.fluentcpp.com/2018/07/27/how-to-efficiently-convert-a-string-to-an-int-in-c/
+4. item 41 - “Consider pass by value for copyable parameters that are cheap to move and always copied”  from Effective Modern C++ by Scott Meyers see section rvalue.
 
 
 
