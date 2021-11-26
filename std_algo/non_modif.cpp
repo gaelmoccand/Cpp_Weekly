@@ -12,6 +12,19 @@ void display(T cont){
     std::cout << "}\n";
 }
 
+struct People {
+    std::string name;
+    int age;
+};
+
+bool operator<(const People& lhs, const People& rhs) {
+    return lhs.age < rhs.age;
+}
+
+bool operator==(const People& lhs, const People& rhs) {
+    return lhs.age == rhs.age;
+}
+
 int main() {
 
     auto v1 = std::vector{0,1,2,3,4,5,6,7,8};
@@ -55,7 +68,7 @@ int main() {
     auto is_equal = std::equal(v1.begin() + 1, v1.end(), v2.begin() + 1);
     std::cout << "v1 and v2 are equal: " << std::boolalpha << is_equal << "\n";
 
-    // 1.5 mismatch return point to the first element in both sequences that did not compare equal to each other.
+    // 1.5 std::equal and std::mismatch. mismatch return point to the first element in both sequences that did not compare equal to each other.
     // also a vesion exist with a predicate as 4th argument
     std::cout << "modify value at [3] \n";
     v2[3] += 10;
@@ -63,6 +76,16 @@ int main() {
 
     auto [mismatch_v1, mismatch_v2] = std::mismatch(v1.begin(), v1.end(), v2.begin());
     std::cout << "v1 element " << *mismatch_v1 << " mismatch v2 element " << *mismatch_v2 <<"\n";
+
+    std::vector<People> group1 {{"Jack", 55},{"Joe", 40},{"John", 45}};
+    std::vector<People> group2 {{"Jack", 55},{"Juan", 40},{"John", 45}};
+
+    auto identical = std::equal(group1.begin(), group1.end(), group2.begin(), group2.end());
+    std::cout << "using the == operator, both group equal : "<< std::boolalpha << identical << "\n";
+    identical = std::equal(group1.begin(), group1.end(), group2.begin(), group2.end(), [](const auto &el1, const auto &el2){
+        return el1.name == el2.name && el1.age == el2.age;
+    });
+    std::cout << "using a predicate, both group equal : "<< std::boolalpha << identical << "\n";
 
     // 1.6 search a sequence and return the 1st occurence
     auto seq = std::vector{4,5,6};
