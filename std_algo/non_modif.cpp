@@ -6,9 +6,9 @@
 template<typename T>
 void display(T cont){
     std::cout << "{";
-    for_each(cont.cbegin(), cont.cend(), [&cont](const auto &elem){
-        std::cout << elem << ":";
-    });
+    for (const auto& elem : cont) {
+        std::cout << elem << ",";
+    }
     std::cout << "}\n";
 }
 struct People {
@@ -16,12 +16,9 @@ struct People {
     int age;
 };
 
-void display(const std::vector<People>& cont){
-    std::cout << "{\n";
-    for_each(cont.cbegin(), cont.cend(), [&cont](const auto &elem){
-        std::cout << " " << elem.name << ":" << elem.age << "\n";
-    });
-    std::cout << "}\n";
+std::ostream& operator<<(std::ostream& out, const People& people)
+{
+   return out << people.name << ':' << people.age ;
 }
 
 bool operator<(const People& lhs, const People& rhs) {
