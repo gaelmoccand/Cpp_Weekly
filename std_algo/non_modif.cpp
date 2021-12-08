@@ -11,11 +11,18 @@ void display(T cont){
     });
     std::cout << "}\n";
 }
-
 struct People {
     std::string name;
     int age;
 };
+
+void display(const std::vector<People>& cont){
+    std::cout << "{\n";
+    for_each(cont.cbegin(), cont.cend(), [&cont](const auto &elem){
+        std::cout << " " << elem.name << ":" << elem.age << "\n";
+    });
+    std::cout << "}\n";
+}
 
 bool operator<(const People& lhs, const People& rhs) {
     return lhs.age < rhs.age;
@@ -68,8 +75,8 @@ int main() {
     auto is_equal = std::equal(v1.begin() + 1, v1.end(), v2.begin() + 1);
     std::cout << "v1 and v2 are equal: " << std::boolalpha << is_equal << "\n";
 
-    // 1.5 std::equal and std::mismatch. mismatch return point to the first element in both sequences that did not compare equal to each other.
-    // also a vesion exist with a predicate as 4th argument
+    // 1.5 std::mismatch. mismatch return point to the first element in both sequences that did not compare equal to each other.
+    // also a version exist with a predicate as 4th argument
     std::cout << "modify value at [3] \n";
     v2[3] += 10;
     display(v2);
@@ -77,8 +84,12 @@ int main() {
     auto [mismatch_v1, mismatch_v2] = std::mismatch(v1.begin(), v1.end(), v2.begin());
     std::cout << "v1 element " << *mismatch_v1 << " mismatch v2 element " << *mismatch_v2 <<"\n";
 
+    // 1.6 std::equal check if 2 sequences are equal and return a boolean. Possible to provide a predicate as last argument
     std::vector<People> group1 {{"Jack", 55},{"Joe", 40},{"John", 45}};
     std::vector<People> group2 {{"Jack", 55},{"Juan", 40},{"John", 45}};
+    display(group1);
+    display(group2);
+
 
     auto identical = std::equal(group1.begin(), group1.end(), group2.begin(), group2.end());
     std::cout << "using the == operator, both group equal : "<< std::boolalpha << identical << "\n";
@@ -87,30 +98,10 @@ int main() {
     });
     std::cout << "using a predicate, both group equal : "<< std::boolalpha << identical << "\n";
 
-    // 1.6 search a sequence and return the 1st occurence
+    // 1.7 std::search search a sequence and return the 1st occurence as result
     auto seq = std::vector{4,5,6};
     if (auto found_seq = search(v1.begin(), v1.end(), seq.begin(), seq.end()); found_seq != v1.end()) {
         std::cout << "found seq [4,5,6] inside container: " << *found_seq <<"\n";
-    }
-
-    // 2. Binary search O(log(n))
-
-    auto v4 = std::vector{0,1,2,3,4,5,6,7,8};
-    auto first = v4.begin();
-    auto last = v4.end();
-    int elem = 1;
-    while (first <= last) {
-        auto middle = first + std::distance(first, last)/2;
-        if (*middle == elem) {
-            std::cout << "found at " << std::distance(v4.begin(), middle);
-            break;
-        }
-        else if ( elem < *middle){
-            last += std::distance(last, middle);
-        }
-        else {
-            first += std::distance(first, middle);
-        }
     }
 
 }
