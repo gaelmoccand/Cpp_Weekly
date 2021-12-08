@@ -19,4 +19,7 @@ Objective is to present, share and dicuss Modern C++ features, best practices an
 ## using string_view instead of std::string
 [string_view](https://github.com/gaelmoccand/Cpp-Daily/blob/develop/string_view/README.md)
 
+## learn some of std::algorithm
+[string_view](https://github.com/gaelmoccand/Cpp-Daily/blob/develop/std_algo/README.md)
+
 
