@@ -29,12 +29,17 @@ reorder.cpp
 
 ## Algo for sets
 
+## Numeric Algo
+using transform
+
 
 
 
 1. https://hackingcpp.com/cpp/cheat_sheets.html
 2. http://www.fluentcpp.com/STL/
 3. https://www.fluentcpp.com/2017/01/09/know-your-algorithms-algos-on-sets/
+4. https://www.fluentcpp.com/2017/10/10/partitioning-with-the-stl/
+5. https://www.fluentcpp.com/2017/02/13/transform-central-algorithm/
 
 
 
