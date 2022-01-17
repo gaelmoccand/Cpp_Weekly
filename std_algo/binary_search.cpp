@@ -8,7 +8,7 @@
 // 2. Binary search O(log(n))
 
 template<typename T, typename K>
-std::optional<int> searchElem(const T& seq, const K elem) {
+std::optional<int> binarySearch(const T& seq, const K elem) {
     auto first = seq.begin();
     auto last = seq.end();
     if (elem < *first || elem > *std::prev(last)) return std::nullopt;
@@ -45,7 +45,7 @@ int main() {
     auto v4 = std::vector{7,0,1,3,4,5,6,2,8};
     quickSort(v4.begin(), v4.end());
 
-    if (auto position = searchElem(v4, 8); position) {
+    if (auto position = binarySearch(v4, 8); position) {
         std::cout << "found at pos :" << *position;
     }
 }
