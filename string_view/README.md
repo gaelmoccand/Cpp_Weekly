@@ -202,15 +202,12 @@ However, is std::string cheap to move?
 
 Although the C++ Standard doesn't specify that, usually, strings are implemented with Small String Optimisation (SSO) - the string object contains extra space to fit characters without additional memory allocation. That means that moving a string is the same as copying it. And since the string is short, the copy is also fast.
 
+Let s compare those alternatives implementations in three cases for a long string: 
+* creating from a string literal
+* creating from an l-value 
+* creating from an rvalue reference
 
 ```cpp
-class UserName {
-       std::string m_name;
-
-public :
-        UserName(std::string str) : m_name(std::move(str)) { }
-};
-
 // creation from a string literal
 UserName u1{"John With Very Long Name"};
 
@@ -222,8 +219,36 @@ UserName u2 {s2};
 // from r-value reference
 std::string s3 {"Marc With Very Long Name"};
 UserName u3 {std::move(s3)};
-
 ```
+
+For const std::string&:
+
+* u1 - two allocations: the first one creates a temp string and binds it to the input parameter, and then there's a copy into mName.
+* u2 - one allocation: we have a no-cost binding to the reference, and then there's a copy into the member variable
+* u3 - one allocation: we have a no-cost binding to the reference, and then there's a copy into the member variable.
+
+You'd have to write a ctor taking r-value reference to skip one allocation for the u1 case, and also that could skip one copy for the u3 case (since we could move from r-value reference).
+
+For std::string_view:
+
+* u1 - one allocation - no copy/allocation for the input parameter, there's only one allocation when mName is created.
+* u2 - one allocation - there's a cheap creation of a string_view for the argument, and then there's a copy into the member variable.
+* u3 - one allocation - there's a cheap creation of a string_view for the argument, and then there's a copy into the member variable.
+
+You'd also have to write a constructor taking r-value reference if you want to save one allocation in the u3 case, as you could move from r-value reference.
+
+
+While the string_view behaves better when you pass a string literal, it's no better when you use it with existing string, or you move from it. However, since the introduction of move semantics in C++11, it's usually better, and safer to pass string as a value and then move from it.
+
+```cpp
+class UserName {
+       std::string m_name;
+
+public :
+        UserName(std::string str) : m_name(std::move(str)) { }
+};
+```
+
 For std::string:
 
 * u1 - one allocation - for the input argument and then one move into the mName. It's better than with const std::string& where we got two memory allocations in that case. And similar to the string_view approach.
@@ -232,8 +257,7 @@ For std::string:
 
 When you pass std::string by value not only is the code simpler, there's also no need to write separate overloads for r-value references.
 
-
-Let's reconsider our example of passing by value when the string is  (SSO):
+Let's reconsider our example of passing by value when the string is **SSO**:
 
 ```cpp
 UserName u1{"John"}; // fits in SSO buffer
@@ -245,7 +269,6 @@ std::string s3 {"Marc"}; // fits in SSO buffer
 UserName u3 {std::move(s3)};
 
 ```
-
 
 In  passed by value case with short string then :
 
