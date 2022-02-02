@@ -8,17 +8,16 @@
 // 2. Binary search O(log(n))
 
 template<typename T, typename K>
-std::optional<int> binarySearch(const T& seq, const K elem) {
+const typename T::iterator binarySearch(T& seq, const K elem) {
     auto first = seq.begin();
     auto last = seq.end();
-    if (elem < *first || elem > *std::prev(last)) return std::nullopt;
+    if (elem < *first || elem > *std::prev(last)) return seq.end();
 
     while (first < last) {
         auto const N = std::distance(first, last);
         auto const pivot = std::next(first, N / 2);
         if (elem == *pivot) {
-            auto found = std::distance(seq.begin(), pivot);
-            return std::make_optional(found);
+            return (pivot);
         }
         else if (elem < *pivot) {
             last = pivot;
@@ -27,19 +26,7 @@ std::optional<int> binarySearch(const T& seq, const K elem) {
             first = pivot;
         }
     }
-    return std::nullopt;
-}
-
-template<typename K>
-void ffunc(std::vector<K> vec)
-{
-    std::cout << "template version \n";
-}
-
-//template<>
-void ffunc(std::vector<int> vec)
-{
-    std::cout << "int version \n";
+    return seq.end();
 }
 
 int main() {
@@ -49,11 +36,11 @@ int main() {
 
     //1. Binary search using std::lower_bound and not
     std::cout << "\n";
-    if (auto position = binarySearch(v4, 7); position) {
+    if (std::vector<int>::iterator position = binarySearch(v4, 7); position != v4.end()) {
         std::cout << "found at pos :" << *position << "\n";
     }
 
-    if (auto position = std::lower_bound(v4.begin(),v4.end(), 0); position != v4.end()) {
+    if (auto position = std::lower_bound(v4.begin(), v4.end(), 0); position != v4.end()) {
         std::cout << "found at pos using lower bound :" << *position << "\n";
     }
 
