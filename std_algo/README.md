@@ -10,17 +10,46 @@ Here is a cheat sheet of some of the most usefull [1].
 From https://hackingcpp.com/
 
 ## Non-Modyfing Sequence Operations
+* std::find_if
 ```cpp
-non_modif.cpp
+    auto v1 = std::vector{0,1,2,3,4,5,6,7,8};
+    auto firstOdd = std::find_if(v1.cbegin(), v1.cend(), [&v1](const auto &elem) {
+        return ((elem % 2) == 1);
+    });
 ```
 
+* std::minmax_element and min_element
+```cpp
+    auto [min, max] = std::minmax_element(v1.cbegin(), v1.cend());
+    std::cout << "the min is: " << *min << " the max is: " << *max << "\n";
+```
+* std::all_of and std::any_of
+```cpp
+    auto inRange = [&v1](const auto &el){return (el >= 0) || (el <= 10);};
+    auto is_in_range = std::all_of(v1.begin(), v1.end(), inRange);
+```
+* std::mismatch and std::equal
+```cpp
+    auto [mismatch_v1, mismatch_v2] = std::mismatch(v1.begin(), v1.end(), v2.begin());
+```
+* std::search -> 1st occurence
+```cpp
+    auto seq = std::vector{4,5,6};
+    if (auto found_seq = search(v1.begin(), v1.end(), seq.begin(), seq.end()); found_seq != v1.end()) {
+        ...
+    }
+```
+#### code 
+non_modif.cpp
 
 ## Reordering elements
 
 ```cpp
-reorder.cpp
+
 ```
 
+#### code 
+reorder.cpp
 ## Changing values
 
 ```cpp

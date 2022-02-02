@@ -44,16 +44,6 @@ int main() {
         std::cout << "1st Odd element found is: " << *firstOdd << "\n";
     }
 
-    // When the sequence is already sorted then use Binary Search ->O(logn) the find 1st elem. not < value
-    if (auto found_elem = std::lower_bound(v1.begin(), v1.end(), 6); found_elem != v1.end()){
-        std::cout << "found element not < 6 using Binary Search at pos: " << std::distance(v1.begin(), found_elem) << "\n";
-    }
-
-    // Same also ->O(logn) to find 1st elem. > value
-    if (auto found_elem = std::upper_bound(v1.begin(), v1.end(), 6); found_elem != v1.end()){
-        std::cout << "found element > 6 using Binary Search at pos: " << std::distance(v1.begin(), found_elem) << "\n";
-    }
-
     // 1.2 minmax find the minimum element inside the container
     auto [min, max] = std::minmax_element(v1.cbegin(), v1.cend());
     std::cout << "the min is: " << *min << " the max is: " << *max << "\n";
