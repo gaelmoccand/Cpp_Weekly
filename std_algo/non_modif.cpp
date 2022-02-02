@@ -2,6 +2,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <functional>
+
 
 template<typename T>
 void display(T cont){
@@ -90,5 +92,13 @@ int main() {
     if (auto found_seq = search(v1.begin(), v1.end(), seq.begin(), seq.end()); found_seq != v1.end()) {
         std::cout << "found seq [4,5,6] inside container: " << *found_seq <<"\n";
     }
+
+    std::string testString = "Hello Super World !!!";
+    std::string needle = "Super";
+    const auto it = search(testString.begin(), testString.end(),
+                       std::boyer_moore_searcher(needle.begin(), needle.end()));
+
+    if (it == cend(testString))
+        std::cout << "The string " << needle << " not found\n";
 
 }
