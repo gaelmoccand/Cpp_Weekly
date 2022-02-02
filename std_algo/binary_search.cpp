@@ -30,22 +30,42 @@ std::optional<int> binarySearch(const T& seq, const K elem) {
     return std::nullopt;
 }
 
-template<typename FwdIt, typename Compare = std::less<>>
-void quickSort(FwdIt first, FwdIt last, Compare cmp = Compare{}) {
-    auto const N = std::distance(first, last);
-    if (N <= 1) return; 
-    auto const pivot = std::next(first, N / 2);
-    std::nth_element(first, pivot, last, cmp);
-    quickSort(first, pivot, cmp); 
-    quickSort(pivot, last, cmp); 
+template<typename K>
+void ffunc(std::vector<K> vec)
+{
+    std::cout << "template version \n";
+}
+
+//template<>
+void ffunc(std::vector<int> vec)
+{
+    std::cout << "int version \n";
 }
 
 int main() {
 
     auto v4 = std::vector{7,0,1,3,4,5,6,2,8};
-    quickSort(v4.begin(), v4.end());
+    std::sort(v4.begin(), v4.end());
 
-    if (auto position = binarySearch(v4, 8); position) {
-        std::cout << "found at pos :" << *position;
+    //1. Binary search using std::lower_bound and not
+    std::cout << "\n";
+    if (auto position = binarySearch(v4, 7); position) {
+        std::cout << "found at pos :" << *position << "\n";
     }
+
+    if (auto position = std::lower_bound(v4.begin(),v4.end(), 0); position != v4.end()) {
+        std::cout << "found at pos using lower bound :" << *position << "\n";
+    }
+
+    //2. example of auto completion, searching a prefix using std::equal_range
+    std::vector<std::string> dico {"auto","circus","deque","doctor","dog","done","doom","door","enough"};
+    const std::string prefix {"do"};
+    auto [foundStart, foundEnd] = std::equal_range(dico.begin(), dico.end(), prefix, [n = prefix.size()](auto prevElem, auto nextElem){
+        return prevElem.substr(0,n) < nextElem.substr(0,n);
+    });
+    if(foundStart != dico.end() && foundEnd != dico.end()){
+       for_each(foundStart, foundEnd, [](const auto & elem){ std::cout << elem <<":";}); 
+    }
+
+
 }
