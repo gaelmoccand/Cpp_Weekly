@@ -60,7 +60,28 @@ This function has 3 modes:
     }
 ```
 
-### Performance and memory usage 
+### 1.5 Examples
+
+* Message Passing eg Windows API
+* Parsing config files [https://www.cppstories.com/2018/06/variant/#examples-of-stdvariant]
+* Properties class 
+
+```cpp
+struct property
+{
+    property();
+    property(const std::string &, const std::any &);
+
+    std::string name;
+    std::any value;
+};
+
+typedef std::vector<property> properties;
+```
+
+
+
+### 1.6 Performance and memory usage 
 
 In c++ and in life in general there is no free lunch. So this cool _std::any_ feature is not an exception come with an extra cost.
 
@@ -68,11 +89,16 @@ The cost is the use of extra dynamic memory allocations.
 
 _std::variant_ and _std::optional_ don't require any extra memory allocations but this is because they know which type (or types) will be stored in the object. std::any does not know which types might be stored and that's why it might use some free store memory.
 
-Fortunately for us, Implementations are encouraged to use **SBO** (Small Buffer Optimisation).  So if your type is an _int_ std::any won't use the free store memory.
+Fortunately for us, Implementations are encouraged to use **SBO** (Small Buffer Optimisation).  
+So if your type is an _int_ std::any won't use the free store memory.
 But that also comes at some cost: it will make the type larger - to fit the buffer.
    
 * sizeof(any) for GCC 8.1:  16 bytes
 * sizeof(any) for Clang 7:  32 bytes
 
-In general, as you see, std::any is not a ìsimpleî type and it brings some of overhead with it. 
+In general, as you see, std::any is not a ‚Äúsimple‚Äù type and it brings some of overhead with it. 
 It's usually not small - due to SBO - it takes 16 or 32 bytes (GCC, Clang, or even 64 bytes in MSVC).
+
+# References:
+
+[https://www.cppstories.com/2018/06/variant/#examples-of-stdvariant]
