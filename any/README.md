@@ -35,7 +35,7 @@ To change the value you have two options: assignement operator or _emplace_.
 
 ### 1.3 access the stored Value
 
-In order to access the value you should use _std::
+In order to access the value you should use std::any_cast
 
 This function has 3 modes:
 * read access - returns a copy of the value, and throws _std::bad_any_cast_ when it fails
