@@ -60,7 +60,26 @@ This function has 3 modes:
     }
 ```
 
-### 1.5 Examples
+### 1.5 Object lifetime 
+
+The crucial part of being safe for std::any is not to leak any resources. To achieve this behaviour std::any will destroy any active object before assigning a new value.
+
+```cpp
+std::any var = std::make_any<MyType>();
+var = 100.0f;
+std::cout << std::any_cast<float>(var) << "\n";
+```
+This will produce the following output:
+
+```cpp
+MyType::MyType
+MyType::~MyType
+100
+```
+
+The any object is initialized with MyType, but before it gets a new value (of 100.0f) it calls the destructor of MyType.
+
+### 1.6 Examples
 
 * Message Passing eg Windows API
 * Parsing config files [https://www.cppstories.com/2018/06/variant/#examples-of-stdvariant]
@@ -81,7 +100,7 @@ typedef std::vector<property> properties;
 
 
 
-### 1.6 Performance and memory usage 
+### 1.7 Performance and memory usage 
 
 In c++ and in life in general there is no free lunch. So this cool _std::any_ feature is not an exception come with an extra cost.
 
