@@ -99,6 +99,8 @@ But that also comes at some cost: it will make the type larger - to fit the buff
 In general, as you see, std::any is not a “simple” type and it brings some of overhead with it. 
 It's usually not small - due to SBO - it takes 16 or 32 bytes (GCC, Clang, or even 64 bytes in MSVC).
 
+To sum up std::any will not dynamically allocate memory for simple types like ints, doubles… but for larger types it will use extra new.
+
 # References:
 
 [https://www.cppstories.com/2018/06/variant/#examples-of-stdvariant]
