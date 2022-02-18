@@ -40,8 +40,6 @@ int main() {
     static_assert(std::variant_size_v<decltype(intFloatString)> == 3);
 
     // default initialized to the first alternative, should be 0
-    std::visit(SampleVisitor{}, intFloatString);
-
     // index will show the currently used 'type'
     std::cout << "index = " << intFloatString.index() << std::endl;
     intFloatString = 100.0f;
@@ -89,33 +87,147 @@ int main() {
 
 
 ## Use cases 
-* All the places where you might get a few types for a single field: so things like parsing command lines, ini files, ...
+* All the places where you might get a few types for a single field: so things like parsing command lines, ini Config files, ...
 * Error handling - for example you can return variant **<Object, ErrorCode>**. If the value is available, then you return Object otherwise you assign some error code.
 * State machines
 * Polymorphism without vtables and inheritance (no Base class)
 
 ### std::variant creation
 
+* By default the variant is init. with the first type.
+    * if it is not possible when the type does not have a default ctor then compiler error
+    * use **std::monostate** to use an empty type to represent empty space (eg no default ctor)
+* Init by value then the best match type is used
+    * if it is ambigous then use std::in_place_index
+
+* use in_place to for complex type like vector
+
 ```cpp
+
+// default initialization: (type has to has a default ctor)
+std::variant<int, float> intFloat;
+
+// pass a value:
+std::variant<int, float, std::string> intFloatString { 10.5f };
+
+// ambiguity
+// double might convert to float or int, so the compiler cannot decide
+//std::variant<int, float, std::string> intFloatString { 10.5 };
+
+// ambiguity resolved by in_place
+std::variant<long, float, std::string> longFloatString { std::in_place_index<1>, 7.6 }; // double!
+
+// in_place for complex types
+std::variant<std::vector<int>, std::string> vecStr { std::in_place_index<0>, { 0, 1, 2, 3 }};
 
 ```
 
 ## changing the value
 
+We can change the value using:
+* the assignment operator
+* emplace
+* get and then assign a new value for the currently active type
+
 ```cpp
+std::variant<int, float, std::string> intFloatString { "Hello" };
+
+intFloatString = 10; // we're now an int
+
+intFloatString.emplace<2>(std::string("Hello")); // we're now string again
+
+// std::get returns a reference, so you can change the value:
+std::get<std::string>(intFloatString) += std::string(" World");
+
+intFloatString = 10.1f;
+if (auto pFloat = std::get_if<float>(&intFloatString); pFloat)
+    *pFloat *= 2.0f;
 
 ```
 
 ## accesing the stored value
 
+2 ways:
+* get might throw exeption
+* get_if returns a pointer to the active type or nullptr but it will not throw
+
 ```cpp
+std::variant<int, float, std::string> intFloatString;
+try {
+    auto f = std::get<float>(intFloatString); 
+    std::cout << "float! " << f << "\n";
+}
+catch (std::bad_variant_access&) {
+    std::cout << "our variant doesn't hold float at this moment...\n";
+}
+
+if (const auto intPtr = std::get_if<int>(&intFloatString)) 
+    std::cout << "int!" << *intPtr << "\n";
+
 
 ```
 
-## Visitors
+## Visitors for std::variant
 
+You can use **std::visitor**. It can call a given visitir on all passed variants.
+You can use either lambda or operator(). 
+ 
 ```cpp
+// a generic lambda:
+auto PrintVisitor = [](const auto& t) { std::cout << t << "\n"; };
+
+std::variant<int, float, std::string> intFloatString { "Hello" };
+std::visit(PrintVisitor, intFloatString);
+
+auto PrintVisitor = [](const auto& t) { std::cout << t << "\n"; };
+auto TwiceMoreVisitor = [](auto& t) { t*= 2; };
+
+std::variant<int, float> intFloat { 20.4f };
+std::visit(PrintVisitor, intFloat);
+std::visit(TwiceMoreVisitor, intFloat);
+std::visit(PrintVisitor, intFloat);
 
 ```
+
+Generic Lambda work but sometime you need different actions for different underlying types.
+
+```cpp
+// visitor with operator()
+struct MultiplyVisitor {
+    float mFactor;
+
+    MultiplyVisitor(float factor) : mFactor(factor) { }
+
+    void operator()(int& i) const {
+        i *= static_cast<int>(mFactor);
+    }
+    void operator()(float& f) const {
+        f *= mFactor;
+    }
+    void operator()(std::string& ) const {
+        // nothing to do here...
+    }
+};
+
+std::visit(MultiplyVisitor(0.5f), intFloat);
+std::visit(PrintVisitor, intFloat);
+
+```
+
+### Memory consideration
+
+std::variant uses the memory in a similar way to union: so it will take the **max size of the underlying types**. But since we need something that will know what’s the currently active alternative, then we need to add some more space.
+
+Plus everything needs to honour the alignment rules.
+
+What’s more interesting is that std::variant won’t allocate any extra space! **No dynamic allocation** happens to hold variants.
+
+To sum up you pay a little extra space for a type-safe functionality.
+
+### Polymorphism example
+
+no v-table needed
+
+have a look at  code poly.cpp
 
 1. https://www.cppstories.com/2018/06/variant/
