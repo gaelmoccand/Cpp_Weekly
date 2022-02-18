@@ -35,10 +35,11 @@ int main() {
     }
 
     // use pointer if do not want to use exception
-    if (auto* pt = std::any_cast<int>(&anyInit); pt)
+    if (auto pt = std::any_cast<int>(&anyInit); pt)
     {
+        std::cout << "value before: " << *pt << '\n';
         *pt=100;
-        std::cout << *pt << '\n';
+        std::cout << "value after: " << *pt << '\n';
     }
     
     //

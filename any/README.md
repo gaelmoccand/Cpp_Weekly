@@ -35,7 +35,7 @@ To change the value you have two options: assignement operator or _emplace_.
 
 ### 1.3 access the stored Value
 
-In order to access the value you should use _std::
+In order to access the value you should use std::any_cast
 
 This function has 3 modes:
 * read access - returns a copy of the value, and throws _std::bad_any_cast_ when it fails
@@ -60,7 +60,47 @@ This function has 3 modes:
     }
 ```
 
-### Performance and memory usage 
+### 1.5 Object lifetime 
+
+The crucial part of being safe for std::any is not to leak any resources. To achieve this behaviour std::any will destroy any active object before assigning a new value.
+
+```cpp
+std::any var = std::make_any<MyType>();
+var = 100.0f;
+std::cout << std::any_cast<float>(var) << "\n";
+```
+This will produce the following output:
+
+```cpp
+MyType::MyType
+MyType::~MyType
+100
+```
+
+The any object is initialized with MyType, but before it gets a new value (of 100.0f) it calls the destructor of MyType.
+
+### 1.6 Examples
+
+* Message Passing eg Windows API
+* Parsing config files [https://www.cppstories.com/2018/06/variant/#examples-of-stdvariant]
+* Properties class 
+
+```cpp
+struct property
+{
+    property();
+    property(const std::string &, const std::any &);
+
+    std::string name;
+    std::any value;
+};
+
+typedef std::vector<property> properties;
+```
+
+
+
+### 1.7 Performance and memory usage 
 
 In c++ and in life in general there is no free lunch. So this cool _std::any_ feature is not an exception come with an extra cost.
 
@@ -68,11 +108,18 @@ The cost is the use of extra dynamic memory allocations.
 
 _std::variant_ and _std::optional_ don't require any extra memory allocations but this is because they know which type (or types) will be stored in the object. std::any does not know which types might be stored and that's why it might use some free store memory.
 
-Fortunately for us, Implementations are encouraged to use **SBO** (Small Buffer Optimisation).  So if your type is an _int_ std::any won't use the free store memory.
+Fortunately for us, Implementations are encouraged to use **SBO** (Small Buffer Optimisation).  
+So if your type is an _int_ std::any won't use the free store memory.
 But that also comes at some cost: it will make the type larger - to fit the buffer.
    
 * sizeof(any) for GCC 8.1:  16 bytes
 * sizeof(any) for Clang 7:  32 bytes
 
-In general, as you see, std::any is not a ìsimpleî type and it brings some of overhead with it. 
+In general, as you see, std::any is not a ‚Äúsimple‚Äù type and it brings some of overhead with it. 
 It's usually not small - due to SBO - it takes 16 or 32 bytes (GCC, Clang, or even 64 bytes in MSVC).
+
+To sum up std::any will not dynamically allocate memory for simple types like ints, doubles‚Ä¶ but for larger types it will use extra new.
+
+# References:
+
+[https://www.cppstories.com/2018/06/variant/#examples-of-stdvariant]
