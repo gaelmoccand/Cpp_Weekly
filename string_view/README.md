@@ -173,6 +173,44 @@ convertAndShow(tempStr.c_str());
 
 convertAndShow only works with null terminated strings, so the only way we have is to create a temporary string tempStr and then pass it to the function.
 
+
+### string vs string_view substr 
+
+*substr* gives probably the best advantage over the standard string *substr*.
+It has the complexity of O(1) and not O(n) as with regular strings.
+
+```cpp
+static  void StringSubStr(benchmark::State& state) {
+    std::string s = "Hello Super Extra Programming World";
+    for (auto _ : state) {
+        auto oneStr = s.substr(0, 5);
+        auto twoStr = s.substr(6, 5);
+        auto threeStr = s.substr(12, 5);
+    }
+}
+...
+
+static void StringViewSubStr(benchmark::State& state) {
+    std::string s = "Hello Super Extra Programming World";
+    for (auto _ : state) {
+        std::string_view sv = s;
+        auto oneSv = sv.substr(0, 5);
+        auto twoSv = sv.substr(6, 5);
+    }
+}
+...
+```
+
+For this test, we have 10x speed-up using the string view.
+
+For this test, we have 10x speed-up!
+
+In this blog post from  Rainer Grimm: C++17 - Avoid Copying with std::string_view - ModernesCpp.com. The performance is even 45 x better using a text file for the test. 
+
+[Rainer Grimm c++17 ](http://www.modernescpp.com/index.php/c-17-avoid-copying-with-std-string-view/).
+
+
+
 ## class member init using string_view
 
 Does string_view is the best candidate for member initialisation ?
