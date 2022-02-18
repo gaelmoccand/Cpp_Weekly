@@ -92,7 +92,7 @@ int main() {
 * State machines
 * Polymorphism without vtables and inheritance (no Base class)
 
-### std::variant creation
+## std::variant creation
 
 * By default the variant is init. with the first type.
     * if it is not possible when the type does not have a default ctor then compiler error
@@ -214,7 +214,7 @@ std::visit(PrintVisitor, intFloat);
 
 ```
 
-### Memory consideration
+## Memory consideration
 
 std::variant uses the memory in a similar way to union: so it will take the **max size of the underlying types**. But since we need something that will know what’s the currently active alternative, then we need to add some more space.
 
@@ -224,7 +224,7 @@ What’s more interesting is that std::variant won’t allocate any extra space! **N
 
 To sum up you pay a little extra space for a type-safe functionality.
 
-### Polymorphism example
+## Polymorphism example
 
 no v-table needed
 
