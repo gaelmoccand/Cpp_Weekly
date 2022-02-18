@@ -25,7 +25,7 @@ reg.bytes.byte3 = 4;
 
 ```
 While it is a valid option for low level programming such register access and byte manipulation. Is it a good fit for high level C++ programming ?
-Union requires are very basic bud you do not know which type is currenbtly active in the union and dtor of th4e underlying type will not be called when switching type. 
+Union requires are very basic bud you do not know which type is currenbly active in the union and dtor of the underlying type will not be called when switching type. 
 A lot of boiler code is required to know which type is active and call the approriate ctor/dtor before switching to new type.
 
 What could make unions better ?
