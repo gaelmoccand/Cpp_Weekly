@@ -17,7 +17,7 @@ Objective is to present, share and dicuss Modern C++ features, best practices an
 [std::any](https://github.com/gaelmoccand/Cpp-Daily/blob/develop/any/README.md)
 
 ## std::variant how and when to use it 
-[std::any](https://github.com/gaelmoccand/Cpp-Daily/blob/develop/variant/README.md)
+[std::variant](https://github.com/gaelmoccand/Cpp-Daily/blob/develop/variant/README.md)
 
 ## using string_view instead of std::string
 [string_view](https://github.com/gaelmoccand/Cpp-Daily/blob/develop/string_view/README.md)
