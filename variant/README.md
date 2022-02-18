@@ -4,14 +4,28 @@ std::variant could be seen as type-safe union
 
 ### C style union
 
-Let's have a look at the DSA example
+In the embedded system world we use a lot C union. 
+But be really carefull different endianness for different processor achitecture eg (ARM vs x86) can be very complicated to handle.
 
 ```cpp
+typedef union
+{
+    struct {
+        unsigned char byte1;
+        unsigned char byte2;
+        unsigned char byte3;
+        unsigned char byte4;
+    } bytes;
+    unsigned int dword;
+} HW_Register;
+HW_Register reg;
+
+reg.dword = 0x12345678;
+reg.bytes.byte3 = 4;
 
 ```
-
-This is quite low level C style code. What if we want to use a kind of union in high level code in C++.
-Union requires are very basic bud you do not know which type is currenbtly active in the union and dtor of th4e underlying type will not be called when switching type. 
+While it is a valid option for low level programming such register access and byte manipulation. Is it a good fit for high level C++ programming ?
+Union requires are very basic bud you do not know which type is currenbly active in the union and dtor of the underlying type will not be called when switching type. 
 A lot of boiler code is required to know which type is active and call the approriate ctor/dtor before switching to new type.
 
 What could make unions better ?
@@ -77,10 +91,10 @@ int main() {
     std::visit(SampleVisitor{}, intFloatString);
 }
 ```
-* You know what’s the currently used type via **index()** or check via **holds_alternative**.
+* You know whatâ€™s the currently used type via **index()** or check via **holds_alternative**.
 * You can access the value by using **get_if** or **get** (might throw bad_variant_access exception)
-* Type Safety - the variant doesn’t allow to get a value of the type that’s not active
-* If you don’t initialize a variant with a value, then the variant is initialized with the **first type**. In that case the first alternative type must have a default constructor.
+* Type Safety - the variant doesnâ€™t allow to get a value of the type thatâ€™s not active
+* If you donâ€™t initialize a variant with a value, then the variant is initialized with the **first type**. In that case the first alternative type must have a default constructor.
 * No extra heap allocation happens
 * You can use a visitor to invoke some action on a currently hold type.
 * Important point, The variant class calls dtor and ctor of non-trivial types, so here the string object is cleaned up before we switch to new variants.
@@ -216,11 +230,11 @@ std::visit(PrintVisitor, intFloat);
 
 ## Memory consideration
 
-std::variant uses the memory in a similar way to union: so it will take the **max size of the underlying types**. But since we need something that will know what’s the currently active alternative, then we need to add some more space.
+std::variant uses the memory in a similar way to union: so it will take the **max size of the underlying types**. But since we need something that will know whatâ€™s the currently active alternative, then we need to add some more space.
 
 Plus everything needs to honour the alignment rules.
 
-What’s more interesting is that std::variant won’t allocate any extra space! **No dynamic allocation** happens to hold variants.
+Whatâ€™s more interesting is that std::variant wonâ€™t allocate any extra space! **No dynamic allocation** happens to hold variants.
 
 To sum up you pay a little extra space for a type-safe functionality.
 
