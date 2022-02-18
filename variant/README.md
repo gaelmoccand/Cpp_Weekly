@@ -231,3 +231,4 @@ no v-table needed
 have a look at  code poly.cpp
 
 1. https://www.cppstories.com/2018/06/variant/
+2. C++17 in Detail: Learn the Exciting Features of the New C++ Standard! by By: Bartomiej Filipek
