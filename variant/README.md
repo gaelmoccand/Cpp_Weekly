@@ -5,7 +5,7 @@ std::variant could be seen as type-safe union
 ### C style union
 
 In the embedded system world we use a lot C union. 
-Different endianness for different processor achitecture eg (ARM vs x86) are very important.
+But be really carefull different endianness for different processor achitecture eg (ARM vs x86) can be very complicated to handle.
 
 ```cpp
 typedef union
