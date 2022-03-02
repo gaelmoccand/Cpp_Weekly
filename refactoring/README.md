@@ -69,9 +69,7 @@ CheckSelectionVer2(const ObjSelection &objList)
     int numCivilUnits = 0;
     int numCombat = 0;
     int numAnimating = 0;
-
     // scan...
-
     return {true, numCivilUnits > 0, numCombat > 0, numAnimating};
 }
 ```
@@ -88,6 +86,120 @@ if (ok)
 ```
 
 Still we might forget the order of the ouptut and might be also tricky to extend the function.
+
+
+### 2.2 using a struct
+
+Outputs param. are related data. So it is a good idea to wrap them together into a struct:
+
+```cpp
+struct SelectionData
+{
+    bool anyCivilUnits {false};
+    bool anyCombatUnits {false};
+    int numAnimating {0};
+};
+
+std::pair<bool, SelectionData> CheckSelectionVer3(const ObjSelection &objList)
+{
+    SelectionData out;
+
+    if (!objList.IsValid())
+        return {false, out};
+    // scan...
+    return {true, out};
+}
+
+// caller :
+if (auto [ok, selData] = CheckSelectionVer3(sel); ok)
+{
+    // ...
+}
+
+```
+
+std::pair is used because we want to keep the error flag and it is not part of the _struct_.
+The advantage now is that if we want to add a new param. then we only need to exted the _struct_.
+
+But Hey the pattern _std::pair<bool,CustomType>_  looks familiar. We might use _std::optional_ instead.
+
+
+### 2.3 using std::optional
+
+As mentioned earlier, sometime we want to achieve a so called "nullable" type. It either contains a value, or it's empty.
+That seems to be a good alternative for this code. We can remove the ok variable and rely on the semantics of the optional.
+
+```cpp
+std::optional<SelectionData> CheckSelectionVer4(const ObjSelection &objList)
+{
+    if (!objList.IsValid())
+        return std::nullopt;
+
+    SelectionData out;
+    // scan...
+    return out;
+}
+
+
+// And the caller site:
+if (auto ret = CheckSelectionVer4(sel); ret.has_value())
+{
+    // access via *ret or even ret->
+    // ret->numAnimating
+}
+```
+
+The advantages of using std::optional is a clean and expressive form
+
+
+### 2.4 using std::variant
+
+Using std::optional does not tell why the error is raised because we do not have any error code to show the reason.
+If this information is required then you should probably use std::variant.
+
+```cpp
+enum class [[nodiscard]] ErrorCode
+{
+    InvalidSelection,
+    Undefined
+};
+
+variant<SelectionData, ErrorCode> CheckSelectionVer5(const ObjSelection &objList)
+{
+    if (!objList.IsValid())
+        return ErrorCode::InvalidSelection;
+
+    SelectionData out;
+    // scan...
+
+    return out;
+}
+
+// on the caller side.
+if (auto ret = CheckSelectionVer5(sel);std::holds_alternative<SelectionData>(ret))
+{
+    std::cout << "ok..." << std::get<SelectionData>(ret).numAnimating << '\n';
+}
+else
+{
+    switch (std::get<ErrorCode>(ret))
+    {
+        case ErrorCode::InvalidSelection:
+            std::cerr << "Invalid Selection!\n";
+            break;
+        case ErrorCode::Undefined:
+            std::cerr << "Undefined Error!\n";
+            break;
+    }
+}
+
+```
+
+It is then possible to return error code and respond to it compare to the std::optional solution.
+
+As it can be seen the code uses std::variant with two possible alternatives: either SelectionData or ErrorCode.
+It's almost like a pair, except that you'll always see one active value.
+
 
 
 ## References
