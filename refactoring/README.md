@@ -6,7 +6,7 @@ let's have a look at some concrete examples.
 
 ### 1. refactoring with optional a legacy method
 
-Let's have a look how to refactor a legacy method:
+Let's have a look how to refactor a legacy method [1]:
 
 ```cpp
     int oldFunc(); // when -1 is return it means no value
@@ -29,7 +29,7 @@ int oldF()
 
 ### 2. refactoring with optional game exmple
 
-Consider a function that takes the current mouse selection for a game. The function scans the selected range and computes several outputs:
+Consider a function that takes the current mouse selection for a game. The function scans the selected range and computes several outputs[2]:
 * the number of animating objects
 * if there are any civil units in the selection
 * if there are any combat units in the selection
@@ -58,6 +58,9 @@ Imrpovements could be :
 
 ### 2.1 tuple version
 
+First improvment might be to use tuple to follow the C++ core F20 rules :
+"return multiple output  values, prefer returning a tuple or struct"
+
 ```cpp
 std::tuple<bool, bool, bool, int>
 CheckSelectionVer2(const ObjSelection &objList)
@@ -73,9 +76,9 @@ CheckSelectionVer2(const ObjSelection &objList)
     return {true, numCivilUnits > 0, numCombat > 0, numAnimating};
 }
 ```
-it is better now because we do not need to check the raw pointerand code is more expressive.
+It is better now because we do not need to check the raw pointers and code is more expressive.
 
-We can use C++17 sturcure binding on the caller side :
+We can use C++17 structure binding on the caller side :
 
 ```cpp
 auto [ok, anyCivil, anyCombat, numAnim] = CheckSelectionVer2(sel);
@@ -204,6 +207,9 @@ It's almost like a pair, except that you'll always see one active value.
 
 ## References
 1. https://www.fluentcpp.com/2016/11/24/clearer-interfaces-with-optionalt
+2. https://www.cppstories.com/2018/04/refactoring-with-c17-stdoptional/#the-code
+3. https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f20-for-out-output-values-prefer-return-values-to-output-parameters
+
 
 
 
