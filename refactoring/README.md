@@ -21,7 +21,7 @@ We would rewrite it so that it benefits from optional to express the **no-value*
 And to limit the amount of code modified at the same time we can still keep the old function, and make it call the new one:
 
 ```cpp
-int oldF()
+int oldFunc()
 {
     return newF().get_value_or(-1);
 }
