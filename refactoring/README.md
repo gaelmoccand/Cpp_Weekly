@@ -27,7 +27,7 @@ int oldFunc()
 }
 ```
 
-### 2. refactoring with optional game exmple
+### 2. refactoring with optional game example
 
 Consider a function that takes the current mouse selection for a game. The function scans the selected range and computes several outputs[2]:
 * the number of animating objects
