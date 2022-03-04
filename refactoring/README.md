@@ -1,8 +1,8 @@
-## refactoring woth std::optional and std::variant
+## refactoring with std::optional and std::variant
 
 Following the [std::optional](https://github.com/gaelmoccand/Cpp-Daily/blob/develop/optional/README.md)
-ob/develop/any/README.md) and [std::variant](https://github.com/gaelmoccand/Cpp-Daily/blob/develop/variant/README.md) subjects,
-let's have a look at some concrete examples.
+ob/develop/any/README.md) and [std::variant](https://github.com/gaelmoccand/Cpp-Daily/blob/develop/variant/README.md) subjects.
+Let's have a look at some concrete examples.
 
 ### 1. refactoring with optional a legacy method
 
