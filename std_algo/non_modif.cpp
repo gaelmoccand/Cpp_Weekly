@@ -51,14 +51,14 @@ int main() {
     std::cout << "the min is: " << *min << " the max is: " << *max << "\n";
 
     // 1.3 all of  and any_of
-    auto inRange = [&v1](const auto &el){return (el >= 0) || (el <= 10);};
+    auto inRange = [&v1](const auto &el){return (el >= 0) && (el <= 10);};
     auto is_in_range = std::all_of(v1.begin(), v1.end(), inRange);
     std::cout << "all elements have values between 0 and 10: " << is_in_range << "\n";
 
     auto predIsVal7 = [&v1](const auto &el){return el == 7;};
     auto has_val_7 = std::any_of(v1.cbegin(), v1.cend(), predIsVal7); // see  none_of
     std::cout << "contains value of 7: " << std::boolalpha << has_val_7 << "\n";
-    
+
     // 1.4 check that both ranges are equal return a bool
     auto v2{v1};
     auto is_equal = std::equal(v1.begin() + 1, v1.end(), v2.begin() + 1);

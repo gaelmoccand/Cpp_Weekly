@@ -36,12 +36,19 @@ From https://hackingcpp.com/
 ```cpp
     auto [mismatch_v1, mismatch_v2] = std::mismatch(v1.begin(), v1.end(), v2.begin());
 ```
-* _std::search_ Searches for the first occurrence of the sequence of elements [seq_first, seq_last) in the range [first, last).
+* _std::search_ Searches for the first occurrence of the **sequence** of elements [seq_first, seq_last) in the range [first, last).
+* for string search you can also use **std::boyer_moore_searcher** or **boyer_moore_horspool_searcher**
 ```cpp
     auto seq = std::vector{4,5,6};
     if (auto found_seq = search(v1.begin(), v1.end(), seq.begin(), seq.end()); found_seq != v1.end()) {
         ...
     }
+
+    std::string testString = "Hello Super World !!!";
+    std::string needle = "Super";
+    const auto it = search(testString.begin(), testString.end(),
+                       std::boyer_moore_searcher(needle.begin(), needle.end()));
+
 ```
 #### code
 non_modif.cpp
