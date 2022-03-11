@@ -1,8 +1,8 @@
-## refactoring woth std::optional and std::variant
+## refactoring with std::optional and std::variant
 
 Following the [std::optional](https://github.com/gaelmoccand/Cpp-Daily/blob/develop/optional/README.md)
-ob/develop/any/README.md) and [std::variant](https://github.com/gaelmoccand/Cpp-Daily/blob/develop/variant/README.md) subjects,
-let's have a look at some concrete examples.
+ob/develop/any/README.md) and [std::variant](https://github.com/gaelmoccand/Cpp-Daily/blob/develop/variant/README.md) subjects.
+Let's have a look at some concrete examples.
 
 ### 1. refactoring with optional a legacy method
 
@@ -21,13 +21,13 @@ We would rewrite it so that it benefits from optional to express the **no-value*
 And to limit the amount of code modified at the same time we can still keep the old function, and make it call the new one:
 
 ```cpp
-int oldF()
+int oldFunc()
 {
     return newF().get_value_or(-1);
 }
 ```
 
-### 2. refactoring with optional game exmple
+### 2. refactoring with optional game example
 
 Consider a function that takes the current mouse selection for a game. The function scans the selected range and computes several outputs[2]:
 * the number of animating objects
